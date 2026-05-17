@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>127 SECTION</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css"/>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+</head>
+<body>
+  <!-- HUD -->
+  <div class="hud">
+
+    <div class="hud-circle c1"></div>
+    <div class="hud-circle c2"></div>
+    <div class="hud-circle c3"></div>
+
+    <div class="scan-lines"></div>
+    <div class="grid"></div>
+
+    <div class="center-cross horizontal"></div>
+    <div class="center-cross vertical"></div>
+
+    <div class="frame tl"></div>
+    <div class="frame tr"></div>
+    <div class="frame bl"></div>
+    <div class="frame br"></div>
+
+    <div class="measure left"></div>
+    <div class="measure right"></div>
+
+  </div>
+
+  <!-- TOP -->
+  <header class="top-ui">
+
+    <div class="system-mark">
+      <div class="system-number">01</div>
+      <div class="system-info">
+        <span>127 SECTION</span>
+        <span>FUTURE INTERFACE</span>
+      </div>
+    </div>
+
+    <div class="top-stats">
+
+      <div class="stat-box cursor-target">
+        <span class="label">CREDITS</span>
+        <span class="value">27614</span>
+      </div>
+
+      <div class="stat-box cursor-target">
+        <span class="label">ORIGIN</span>
+        <span class="value">1205</span>
+      </div>
+
+      <div class="stat-box small cursor-target">
+        <span class="value">4+</span>
+      </div>
+
+    </div>
+
+  </header>
+
+  <!-- MAIN -->
+  <main class="layout">
+
+    <!-- LEFT -->
+    <aside class="left-ui">
+
+      <div class="side-label">
+        SYSTEM STATUS
+      </div>
+
+      <div class="vertical-text">
+        TERMINAL / ACTIVE
+      </div>
+
+      <div class="left-dots">
+        <span></span>
+        <span></span>
+        <span class="active"></span>
+        <span></span>
+      </div>
+
+    </aside>
+
+    <!-- CENTER -->
+    <section class="center-stage">
+
+      <div class="center-rings"></div>
+
+      <div class="character-area">
+
+        <div class="image-mask">
+
+          <img
+            src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA0MTBfMjYg%2FMDAxNzQ0Mjg5NTQ3MzU5.eyAJveQ1b5JXE6kozdDXm41V5S-XShVeQiKtHkT6T0Ag.k9nQTSyDB_O5Ob2vQemxi1xBEsiSoOni1RyDPMyVrgUg.JPEG%2F1744289542138.jpg&type=sc960_832"
+            alt="character"
+            class="character-image"
+          >
+
+          <div class="image-glitch"></div>
+
+        </div>
+
+        <div class="target-box"></div>
+
+      </div>
+
+      <div class="floating-data left-data">
+        <span>2017</span>
+        <span>2018</span>
+        <span>2019</span>
+        <span>2020</span>
+      </div>
+
+      <div class="floating-data right-data">
+        <span>NODE</span>
+        <span>TYPE-A</span>
+        <span>ACTIVE</span>
+      </div>
+
+    </section>
+
+    <!-- RIGHT -->
+    <section class="menu-ui">
+
+      <div class="menu-title">
+        DESIGN
+      </div>
+
+      <div class="menu-sub">
+        INSERT COIN
+      </div>
+
+      <div class="menu-grid">
+
+        <a href="#" class="menu-card primary top-left cursor-target">
+          <span class="main">INVENTORY</span>
+          <span class="sub">SYSTEM ACCESS</span>
+        </a>
+
+        <a href="#" class="menu-card top-right cursor-target">
+          <span class="main">INFORM</span>
+          <span class="sub">RECRUIT</span>
+        </a>
+
+        <a href="gacha/index.html"
+          class="menu-card large-bottom accent cursor-target start-button">
+          <span class="main">START OPERATION</span>
+          <span class="sub">BEGIN MISSION</span>
+        </a>
+
+      </div>
+
+      <div class="bottom-hearts">
+        <span class="heart active"></span>
+        <span class="heart active"></span>
+        <span class="heart active"></span>
+        <span class="heart"></span>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- BOTTOM -->
+  <footer class="bottom-ui">
+
+    <div>HI SCORE / 19009304</div>
+    <div>2019 / 04 / 03</div>
+
+  </footer>
+
+  <div id="target-cursor" class="target-cursor-wrapper">
+
+    <div class="cursor-rotator">
+
+      <div class="target-cursor-dot"></div>
+
+      <div class="target-cursor-corner corner-tl"></div>
+      <div class="target-cursor-corner corner-tr"></div>
+      <div class="target-cursor-corner corner-br"></div>
+      <div class="target-cursor-corner corner-bl"></div>
+
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+
+  <div class="screen-transition"></div>
+</body>
+</html>
