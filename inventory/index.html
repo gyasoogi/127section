@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UF-ARCHIVE // PROTO-SYSTEM</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f4f4f4;
+      --line: rgba(0,0,0,0.08);
+      --line-strong: rgba(0,0,0,0.18);
+      --text: #111;
+      --sub: rgba(0,0,0,0.45);
+      --accent: #7a7a7a;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+    }
+
+    .font-orbitron {
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    /* 배경 격자 및 스캔라인 */
+    .grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, rgba(0,0,0,0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0,0,0,0.03) 1px, transparent 1px);
+      background-size: 80px 80px;
+      z-index: -2;
+    }
+
+    .scan-lines {
+      position: absolute;
+      inset: 0;
+      opacity: .08;
+      background-image:
+        repeating-linear-gradient(
+          0deg,
+          rgba(0,0,0,.2) 0px,
+          rgba(0,0,0,.2) 1px,
+          transparent 1px,
+          transparent 4px
+        );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    #ui-scale-wrapper {
+      position: absolute;
+      width: 1350px;
+      height: 800px;
+      top: 50%;
+      left: 50%;
+      transform-origin: center center;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    
+    .fade-content {
+      transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
+    }
+    .fade-out {
+      opacity: 0;
+      transform: translateY(5px);
+    }
+
+    /* 이미지 마스크 & 글리치 효과 */
+    .image-mask {
+      clip-path: polygon(
+        10% 0%, 90% 0%, 100% 10%, 100% 90%, 90% 100%, 10% 100%, 0% 90%, 0% 10%
+      );
+    }
+
+    .image-glitch {
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(
+          180deg,
+          transparent 0px,
+          transparent 5px,
+          rgba(255,255,255,.3) 6px
+        );
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    /* 타겟 박스 프레임 */
+    .target-box::before,
+    .target-box::after {
+      content: "";
+      position: absolute;
+      width: 36px;
+      height: 36px;
+      border: 3px solid var(--text);
+      z-index: 10;
+    }
+    .target-box::before {
+      top: -2px; left: -2px;
+      border-right: none; border-bottom: none;
+    }
+    .target-box::after {
+      bottom: -2px; right: -2px;
+      border-left: none; border-top: none;
+    }
+
+    /* 장식 선 */
+    .measure-line {
+      position: absolute;
+      width: 1px;
+      background: linear-gradient(to bottom, #000 0%, rgba(0,0,0,.1) 100%);
+    }
+
+    /* 세로 텍스트 */
+    .vertical-text {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      letter-spacing: 5px;
+    }
+  </style>
+</head>
+<body class="overflow-hidden w-screen h-screen relative selection:bg-black selection:text-white">
+  
+  <div class="grid-bg"></div>
+  <div class="scan-lines"></div>
+
+  <div id="ui-scale-wrapper">
+    
+    <div class="relative w-[1300px] h-[800px] flex box-border border border-[var(--line-strong)] bg-[rgba(255,255,255,0.4)] backdrop-blur-sm">
+      
+      <div class="absolute -top-1 -left-1 w-4 h-4 border-t-[3px] border-l-[3px] border-black z-50"></div>
+      <div class="absolute -top-1 -right-1 w-4 h-4 border-t-[3px] border-r-[3px] border-black z-50"></div>
+      <div class="absolute -bottom-1 -left-1 w-4 h-4 border-b-[3px] border-l-[3px] border-black z-50"></div>
+      <div class="absolute -bottom-1 -right-1 w-4 h-4 border-b-[3px] border-r-[3px] border-black z-50"></div>
+
+      <div class="w-[120px] border-r border-[var(--line-strong)] flex flex-col items-center py-8 relative z-20 shrink-0">
+        
+        <div class="text-[var(--sub)] text-[10px] tracking-[4px] mb-1 font-bold uppercase">FILE NO.</div>
+        <div id="sidebar-file-no" class="font-orbitron text-black text-3xl font-bold tracking-[6px] border-b border-[var(--line-strong)] pb-3 mb-6">010</div>
+        
+        <div id="barcode" class="flex gap-[2px] h-12 w-full px-4 opacity-40 mb-6 mix-blend-multiply"></div>
+        
+        <div id="sidebar-icons" class="flex-1 flex flex-col items-center justify-start gap-3 w-full overflow-y-auto py-2">
+        </div>
+
+        <div class="mt-auto flex flex-col items-center gap-2 pt-4 w-full">
+          <div class="w-12 h-[1px] bg-[var(--line-strong)] mb-1"></div>
+          <div class="text-[var(--sub)] text-[10px] tracking-[4px] uppercase font-bold">UF-ARCHIVE</div>
+          <div class="text-[var(--sub)] text-[9px] tracking-[2px] opacity-70">v.1.0.0</div>
+        </div>
+      </div>
+
+      <div id="left-page" class="fade-content flex-1 p-10 relative flex flex-col border-r border-[var(--line)]">
+        
+        <div class="flex justify-between items-center mb-6">
+          <div class="flex items-center gap-4">
+            <div class="w-6 h-6 border border border-[var(--line-strong)] flex items-center justify-center">
+              <div class="w-2 h-2 bg-black"></div>
+            </div>
+            <div class="text-[var(--text)] text-xs tracking-[4px] font-bold uppercase flex items-center gap-2">
+              <span class="opacity-45">TOP TIER</span>
+              <span class="opacity-20">///</span>
+              CHARACTER DATA SHEET
+            </div>
+          </div>
+        </div>
+
+        <div class="relative w-full aspect-[4/3.5] bg-[rgba(0,0,0,0.03)] border border-[var(--line)] p-4 mb-6 flex justify-center items-center">
+          <div class="absolute inset-0 bg-[linear-gradient(to_right,var(--line)_1px,transparent_1px),linear-gradient(to_bottom,var(--line)_1px,transparent_1px)] bg-[size:20px_20px] opacity-50"></div>
+          
+          <div class="relative w-[90%] h-[90%] image-mask bg-white target-box flex items-center justify-center overflow-hidden">
+             <div class="absolute inset-0 bg-[repeating-linear-gradient(45deg,var(--line)0px,var(--line)2px,transparent_2px,transparent_8px)] opacity-20"></div>
+             
+             <div class="relative w-full h-full opacity-30 flex flex-col items-center justify-center mix-blend-multiply">
+                <i data-lucide="scan-line" class="w-16 h-16 mb-4 text-black"></i>
+                <div id="portrait-missing-text" class="text-black font-orbitron font-bold tracking-[4px] text-xl text-center">
+                  NO IMAGE DATA
+                </div>
+             </div>
+             
+             <div class="image-glitch"></div>
+          </div>
+
+          <div class="absolute top-8 left-8 bg-black text-white px-6 py-2 flex items-center gap-3 z-20" style="clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%);">
+            <span id="badge-name" class="font-orbitron font-bold text-2xl tracking-[4px]">EVA</span>
+          </div>
+          
+          <div class="absolute right-4 top-1/4 h-1/2 measure-line"></div>
+        </div>
+
+        <div class="flex justify-between items-end border-b border-[var(--line-strong)] pb-3 mb-6">
+          <div class="flex items-baseline gap-4">
+            <span id="info-code-short" class="font-orbitron text-5xl font-bold tracking-[2px] text-black">010</span>
+            <div class="flex flex-col">
+              <span class="text-[10px] text-[var(--sub)] tracking-[4px]">CODE_ID:</span>
+              <span id="info-code-full" class="text-sm font-bold text-black tracking-[2px]">EVA_010</span>
+            </div>
+          </div>
+          <div id="info-affiliation-tag" class="text-[var(--sub)] text-[10px] tracking-[5px] uppercase font-bold">UNKNOWN FUTURE</div>
+        </div>
+
+        <div class="flex justify-between items-start gap-8 flex-1">
+          
+          <div class="shrink-0 mt-1">
+            <div class="flex items-end gap-4">
+              <h1 id="info-name-cn" class="text-4xl font-bold text-black tracking-[4px]">에바</h1>
+              <h2 id="info-name-en" class="font-orbitron text-2xl text-[var(--sub)] tracking-[6px]">EVA</h2>
+            </div>
+            <div id="info-sub-label" class="border border-[var(--line-strong)] text-[var(--sub)] text-[10px] inline-flex px-3 py-1 mt-3 tracking-[4px] uppercase font-bold bg-[rgba(255,255,255,0.5)]">
+              UNKNOWN FUTURE
+            </div>
+          </div>
+
+          <div class="flex-1 flex flex-col gap-3 text-[11px] font-bold tracking-[2px] uppercase w-full">
+            <div class="flex border-b border-[var(--line)] pb-2 items-center justify-between">
+              <div class="flex items-center">
+                <div class="w-2 h-2 bg-black mr-3"></div>
+                <span class="text-[var(--sub)]">Height</span>
+              </div>
+              <span id="stat-height" class="text-black text-right">162cm</span>
+            </div>
+            <div class="flex border-b border-[var(--line)] pb-2 items-center justify-between">
+              <div class="flex items-center">
+                <div class="w-2 h-2 bg-transparent border border-black mr-3"></div>
+                <span class="text-[var(--sub)]">Affiliation</span>
+              </div>
+              <span id="stat-affiliation" class="text-black text-right">UNKNOWN FUTURE</span>
+            </div>
+            <div class="flex border-b border-[var(--line)] pb-2 items-center justify-between">
+              <div class="flex items-center">
+                <div class="w-2 h-2 bg-black mr-3"></div>
+                <span class="text-[var(--sub)]">Position</span>
+              </div>
+              <span id="stat-position" class="text-black text-right">전술 지원 / 정찰관</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div id="right-page" class="fade-content flex-1 p-10 pr-16 relative flex flex-col">
+        
+        <div class="absolute top-10 right-12 flex flex-col items-center opacity-30">
+          <svg viewBox="0 0 100 100" class="w-16 h-16 text-black" fill="currentColor">
+            <path d="M50 0 L90 20 L90 80 L50 100 L10 80 L10 20 Z" fill="none" stroke="currentColor" stroke-width="4" />
+            <path d="M30 30 L70 30 L70 45 L50 45 L50 70 L30 70 Z" />
+            <path d="M70 55 L70 70 L60 70 L60 55 Z" />
+            <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="4 4" />
+          </svg>
+          <div class="font-orbitron font-bold text-[10px] tracking-[4px] mt-3 text-center">127SECTION</div>
+        </div>
+
+        <div class="mb-2 w-full">
+          <div class="flex items-center gap-4 mb-2 border-b border-[var(--line-strong)] pb-2 w-[85%]">
+            <div class="w-4 h-4 border-2 border-black flex items-center justify-center"><div class="w-1 h-1 bg-black"></div></div>
+            <h3 class="font-orbitron text-black font-bold tracking-[4px] text-lg">STATUS_ANALYSIS</h3>
+            <span class="text-[var(--sub)] text-[10px] tracking-[4px] ml-auto" style="margin-left: -10px; margin-bottom: -5px;">SYS_ACTIVE</span>
+          </div>
+          
+          <div class="flex items-center gap-6 py-1">
+            <div class="relative w-[250px] h-[250px] shrink-0 target-box bg-[rgba(255,255,255,0.5)] border border-[var(--line)]" style="margin: 10px;">
+              <svg id="radar-chart-svg" width="250" height="250" viewBox="0 0 250 250" class="absolute inset-0"></svg>
+              <div id="radar-chart-labels" class="absolute inset-0 pointer-events-none"></div>
+            </div>
+
+            <div class="flex-1 min-w-0 pr-4 self-center" style="MARGIN-TOP: 80px;">
+              <div class="flex items-center gap-3 mb-2">
+                <div class="bg-black text-white text-[10px] px-3 py-1 font-bold tracking-[3px] uppercase">SYS_NOTE</div>
+              </div>
+              <p id="info-notes" class="text-black text-xs leading-[1.7] font-medium tracking-[1px] bg-[var(--line)] p-4 border-l-4 border-black h-[140px]">
+                UF 최전선 부서 출신의 엘리트 요원,<br />
+                데이터 분석 및 전술 추론에 능숙하다.<br />
+                그의 진짜 신분과 과거는 아직 조사 중이다.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-4 relative z-10 flex-1">
+          <div class="flex items-center gap-4 mb-3 border-b border-[var(--line-strong)] pb-2 w-full">
+            <div class="w-4 h-4 border-2 border-black flex items-center justify-center"><div class="w-1 h-1 bg-black"></div></div>
+            <h3 class="font-orbitron text-black font-bold tracking-[4px] text-lg">SKILL_SET</h3>
+          </div>
+          
+          <!-- 스킬 컨테이너 내부 스크롤 패딩 처리 -->
+          <div id="skills-container" class="flex flex-col gap-2 max-h-[260px] pr-1"></div>
+        </div>
+
+      </div>
+
+      <div class="absolute right-[-46px] top-20 flex flex-col gap-1 z-0">
+        <div class="relative w-[46px] h-[140px] flex items-center justify-center cursor-pointer transition-all duration-200 origin-left bg-black text-white" style="clip-path: polygon(0 0, 100% 5%, 100% 95%, 0 100%);">
+          <div class="whitespace-nowrap tracking-[3px] text-xs font-orbitron font-bold vertical-text rotate-180">01. PROFILE</div>
+        </div>
+        <div class="relative w-[46px] h-[140px] flex items-center justify-center cursor-pointer transition-all duration-200 origin-left bg-[rgba(0,0,0,0.1)] hover:bg-[rgba(0,0,0,0.2)] text-black border-y border-[var(--line)]" style="clip-path: polygon(0 0, 100% 5%, 100% 95%, 0 100%);">
+          <div class="whitespace-nowrap tracking-[3px] text-xs font-orbitron font-bold vertical-text rotate-180">02. ABILITY</div>
+        </div>
+        <div class="relative w-[46px] h-[140px] flex items-center justify-center cursor-pointer transition-all duration-200 origin-left bg-[rgba(0,0,0,0.1)] hover:bg-[rgba(0,0,0,0.2)] text-black border-y border-[var(--line)]" style="clip-path: polygon(0 0, 100% 5%, 100% 95%, 0 100%);">
+          <div class="whitespace-nowrap tracking-[3px] text-xs font-orbitron font-bold vertical-text rotate-180">03. STORY</div>
+        </div>
+        <div class="relative w-[46px] h-[140px] flex items-center justify-center cursor-pointer transition-all duration-200 origin-left bg-[rgba(0,0,0,0.1)] hover:bg-[rgba(0,0,0,0.2)] text-black border-y border-[var(--line)]" style="clip-path: polygon(0 0, 100% 5%, 100% 95%, 0 100%);">
+          <div class="whitespace-nowrap tracking-[3px] text-xs font-orbitron font-bold vertical-text rotate-180">04. FILES</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    /* 1. DYNAMIC SCREEN SCALING */
+    function autoScaleUI() {
+      const wrapper = document.getElementById('ui-scale-wrapper');
+      if (!wrapper) return;
+      const baseWidth = 1450;
+      const baseHeight = 850;
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+      const scaleX = windowWidth / baseWidth;
+      const scaleY = windowHeight / baseHeight;
+      const scale = Math.min(scaleX, scaleY) * 0.95; 
+      wrapper.style.transform = `translate(-50%, -50%) scale(${scale})`;
+    }
+    window.addEventListener('resize', autoScaleUI);
+    document.addEventListener('DOMContentLoaded', autoScaleUI);
+
+    /* 2. CHARACTER DATA */
+    const CHARACTERS = [
+      {
+        code: "010", codeStr: "EVA_010", name: "에바", englishName: "EVA",
+        height: "162cm", weight: "47kg", affiliation: "UNKNOWN FUTURE", position: "전술 지원 / 정찰관",
+        icon: "target",
+        notes: "UF 최전선 부서 출신의 엘리트 요원, 데이터 분석 및 전술 추론에 능숙하다. 그의 진짜 신분과 과거는 아직 조사 중이다.",
+        stats: [
+          { label: '전투력', sub: 'COMBAT', value: 75, grade: 'A' },
+          { label: '기동력', sub: 'MOBILITY', value: 45, grade: 'D' },
+          { label: '체력', sub: 'VITALITY', value: 95, grade: 'S' },
+          { label: '정신력', sub: 'MENTAL', value: 60, grade: 'B' },
+          { label: '잠재력', sub: 'POTENTIAL', value: 50, grade: 'C' },
+          { label: '판단력', sub: 'CONTROL', value: 80, grade: 'A' }
+        ],
+        skills: [
+          { icon: 'radio', name: '양자 관측', desc: '짧은 시간 동안 아군 전체의 명중률과 치명타 확률을 높인다.', level: 3 },
+          { icon: 'eye', name: '미래 예견', desc: '적의 행동을 예측하고 약점을 표시한다.', level: 2 },
+          { icon: 'activity', name: '신호 교란', desc: '적에게 교란을 일으켜 명중률과 적 탐지 능력을 떨어뜨린다.', level: 2 },
+          { icon: 'hexagon', name: '종국 추론', desc: '전장 데이터를 분석하여 최적의 전술 방안을 생성한다.', level: 3 }
+        ]
+      },
+      {
+        code: "011", codeStr: "REYN_011", name: "레인", englishName: "REYN",
+        height: "188cm", weight: "85kg", affiliation: "VANGUARD DIVISION", position: "전선 중장 / 선봉 방패병",
+        icon: "shield",
+        notes: "바위처럼 단단한 전선 방위의 핵심 요원. 극도로 높은 강도의 타격을 견뎌낼 수 있는 입자 실드 스킬을 보유하고 있다. 의리가 두텁고 언제나 동료의 앞을 지킨다.",
+        stats: [
+          { label: '전투력', sub: 'COMBAT', value: 65, grade: 'B' },
+          { label: '기동력', sub: 'MOBILITY', value: 35, grade: 'E' },
+          { label: '체력', sub: 'VITALITY', value: 98, grade: 'SS' },
+          { label: '정신력', sub: 'MENTAL', value: 85, grade: 'A' },
+          { label: '잠재력', sub: 'POTENTIAL', value: 55, grade: 'C' },
+          { label: '판단력', sub: 'CONTROL', value: 70, grade: 'B' }
+        ],
+        skills: [
+          { icon: 'shield', name: '자성 장벽', desc: '원거리 탄도를 저지할 수 있는 강력한 자성 방패를 전개한다.', level: 3 },
+          { icon: 'zap', name: '중력 강습', desc: '지면을 내리쳐 넓은 범위 내의 적 대상을 감속 상태에 빠뜨린다.', level: 2 },
+          { icon: 'activity', name: '과부하 융단', desc: '실드의 일부를 희생하여 짧은 시간 동안 높은 저항력으로 전환한다.', level: 1 },
+          { icon: 'hexagon', name: '절대 방어', desc: '생성 반지름 5미터의 난공불락 방어 영역 구축.', level: 2 }
+        ]
+      },
+      {
+        code: "012", codeStr: "SHADOW_012", name: "섀도우", englishName: "SHADOW",
+        height: "175cm", weight: "60kg", affiliation: "BLACK OPS", position: "적후 침투 / 은밀 암살자",
+        icon: "zap",
+        notes: "소속과 출신이 모두 불명에 부쳐진 은밀 기동 요원. 그림자 속을 자유롭게 이동하며 치명적인 일격을 가하는 것에 능숙하다. 기밀 데이터 말소율이 극도로 높음.",
+        stats: [
+          { label: '전투력', sub: 'COMBAT', value: 95, grade: 'S' },
+          { label: '기동력', sub: 'MOBILITY', value: 95, grade: 'S' },
+          { label: '체력', sub: 'VITALITY', value: 40, grade: 'D' },
+          { label: '정신력', sub: 'MENTAL', value: 75, grade: 'A' },
+          { label: '잠재력', sub: 'POTENTIAL', value: 80, grade: 'A' },
+          { label: '판단력', sub: 'CONTROL', value: 65, grade: 'B' }
+        ],
+        skills: [
+          { icon: 'eye', name: '광학 미채', desc: '완전 은신 상태에 진입하며, 이 기간 동안 이동 속도가 크게 상승한다.', level: 3 },
+          { icon: 'target', name: '백스탭 피니시', desc: '은신 상태이거나 적의 시야 사각지대에 있을 때 3배의 파괴력을 입힌다.', level: 3 },
+          { icon: 'radio', name: '위상 점멸', desc: '앞으로 일정 거리 순간이동하고 홀로그램 잔상을 남긴다.', level: 2 }
+        ]
+      },
+      {
+        code: "013", codeStr: "LUNA_013", name: "루나", englishName: "LUNA",
+        height: "158cm", weight: "43kg", affiliation: "ASTRON RESEARCH", position: "의무 지원 / 양자 의학자",
+        icon: "moon",
+        notes: "우주 입자와 생체 에너지를 결합한 첨단 치료 기술의 선구자. 전투 능력은 낮으나 전장의 판도를 바꾸는 회복 및 정화 프로토콜을 가동한다.",
+        stats: [
+          { label: '전투력', sub: 'COMBAT', value: 30, grade: 'F' },
+          { label: '기동력', sub: 'MOBILITY', value: 60, grade: 'B' },
+          { label: '체력', sub: 'VITALITY', value: 55, grade: 'C' },
+          { label: '정신력', sub: 'MENTAL', value: 90, grade: 'S' },
+          { label: '잠재력', sub: 'POTENTIAL', value: 85, grade: 'A' },
+          { label: '판단력', sub: 'CONTROL', value: 90, grade: 'S' }
+        ],
+        skills: [
+          { icon: 'activity', name: '양자 정화', desc: '아군에게 걸린 디버프를 즉시 제거하고 지속 치유막을 부여한다.', level: 3 },
+          { icon: 'radio', name: '위성 펄스', desc: '주변 아군의 에너지를 충전하여 스킬 쿨타임을 감소시킨다.', level: 2 }
+        ]
+      },
+      {
+        code: "014", codeStr: "KAI_014", name: "카이", englishName: "KAI",
+        height: "182cm", weight: "74kg", affiliation: "CYBER NETWORKS", position: "원거리 타격 / 저격수",
+        icon: "crosshair",
+        notes: "냉철한 성격의 탑클래스 스나이퍼. 사이보그안(眼)을 통해 수 킬로미터 밖의 표적도 오차 없이 포착한다. 불필요한 대화나 감정 낭비를 극도로 싫어한다.",
+        stats: [
+          { label: '전투력', sub: 'COMBAT', value: 92, grade: 'S' },
+          { label: '기동력', sub: 'MOBILITY', value: 55, grade: 'C' },
+          { label: '체력', sub: 'VITALITY', value: 50, grade: 'C' },
+          { label: '정신력', sub: 'MENTAL', value: 80, grade: 'A' },
+          { label: '잠재력', sub: 'POTENTIAL', value: 65, grade: 'B' },
+          { label: '판단력', sub: 'CONTROL', value: 85, grade: 'A' }
+        ],
+        skills: [
+          { icon: 'target', name: '정밀 궤적', desc: '치명타 확률이 100%로 고정되는 저격 모드에 돌입한다.', level: 3 },
+          { icon: 'eye', name: '열화상 스캔', desc: '벽 뒤에 숨은 적의 위치를 탐지해 아군 공유 네트워크에 전송한다.', level: 2 },
+          { icon: 'hexagon', name: '철갑 관통탄', desc: '적의 방어 장벽을 무시하고 직접적인 타격을 입힌다.', level: 2 }
+        ]
+      },
+      {
+        code: "015", codeStr: "ORION_015", name: "오리온", englishName: "ORION",
+        height: "179cm", weight: "71kg", affiliation: "NEXUS CORE", position: "기술 분석 / 시스템 해커",
+        icon: "cpu",
+        notes: "네트워크 및 기계 제어의 천재. 전장에 배치된 드론 and 전술 기기들을 실시간으로 오버라이딩하여 아군 편의 시스템으로 역이용하는 능력이 탁월하다.",
+        stats: [
+          { label: '전투력', sub: 'COMBAT', value: 50, grade: 'C' },
+          { label: '기동력', sub: 'MOBILITY', value: 70, grade: 'B' },
+          { label: '체력', sub: 'VITALITY', value: 60, grade: 'B' },
+          { label: '정신력', sub: 'MENTAL', value: 85, grade: 'A' },
+          { label: '잠재력', sub: 'POTENTIAL', value: 92, grade: 'S' },
+          { label: '판단력', sub: 'CONTROL', value: 75, grade: 'A' }
+        ],
+        skills: [
+          { icon: 'zap', name: '메인프레임 재부팅', desc: '주변 적 메카닉 유닛의 제어권을 5초간 탈취한다.', level: 3 },
+          { icon: 'radio', name: '보호 도메인', desc: '아군 전자 장비를 보호하는 재밍 방화벽 영역을 생성한다.', level: 2 }
+        ]
+      },
+      {
+        code: "016", codeStr: "BLAZE_016", name: "블레이즈", englishName: "BLAZE",
+        height: "185cm", weight: "80kg", affiliation: "ECLIPSE SQUAD", position: "화력 압도 / 중화기병",
+        icon: "flame",
+        notes: "고열 플라즈마 화기를 자유자재로 다루는 돌격대장. 전면전을 선호하며 방어선을 단숨에 소각시키는 무자비한 화력을 자랑한다. 충동적인 성향으로 경고를 자주 받음.",
+        stats: [
+          { label: '전투력', sub: 'COMBAT', value: 88, grade: 'A' },
+          { label: '기동력', sub: 'MOBILITY', value: 75, grade: 'A' },
+          { label: '체력', sub: 'VITALITY', value: 80, grade: 'A' },
+          { label: '정신력', sub: 'MENTAL', value: 50, grade: 'C' },
+          { label: '잠재력', sub: 'POTENTIAL', value: 70, grade: 'B' },
+          { label: '판단력', sub: 'CONTROL', value: 55, grade: 'C' }
+        ],
+        skills: [
+          { icon: 'zap', name: '플라즈마 소각', desc: '전방에 부채꼴 모양으로 지속적인 화염 피해와 지속 연소 디버프를 준다.', level: 3 },
+          { icon: 'activity', name: '과열 폭주', desc: '이동 속도와 공격 속도가 대폭 폭증하지만 지속해서 체력을 소모한다.', level: 2 }
+        ]
+      }
+    ];
+
+    let currentIdx = 0;
+    let isScrollThrottled = false;
+
+    // Render Barcode
+    const barcodeContainer = document.getElementById('barcode');
+    const barcodeWidths = [1, 3, 1, 1, 4, 1, 2, 1, 1, 2, 3, 1, 2, 1];
+    barcodeContainer.innerHTML = barcodeWidths.map(w => 
+      `<div class="bg-black h-full" style="width: ${w * 2}px"></div>`
+    ).join('');
+
+    /* 3. CHARACTER RENDER ENGINE */
+    function renderCharacter(index) {
+      const data = CHARACTERS[index];
+      
+      // Sidebar Icon Update
+      const iconNodes = document.querySelectorAll('.sidebar-icon-btn');
+      iconNodes.forEach((node, idx) => {
+        if(idx === index) {
+          node.className = "sidebar-icon-btn w-14 h-14 bg-black text-white flex items-center justify-center shrink-0 cursor-pointer transition-all border border-black";
+        } else {
+          node.className = "sidebar-icon-btn w-12 h-12 bg-transparent text-[var(--sub)] hover:text-black flex items-center justify-center shrink-0 cursor-pointer transition-all border border-[var(--line)] hover:border-black";
+        }
+      });
+
+      const leftPage = document.getElementById('left-page');
+      const rightPage = document.getElementById('right-page');
+      leftPage.classList.add('fade-out');
+      rightPage.classList.add('fade-out');
+
+      setTimeout(() => {
+        document.getElementById('sidebar-file-no').textContent = data.code;
+        document.getElementById('portrait-missing-text').innerHTML = `NO IMAGE DATA<br><span class="text-xs tracking-[4px] mt-2 block opacity-50">[ ${data.codeStr} ]</span>`;
+        document.getElementById('badge-name').textContent = data.englishName;
+        document.getElementById('info-code-short').textContent = data.code;
+        document.getElementById('info-code-full').textContent = data.codeStr;
+        document.getElementById('info-affiliation-tag').textContent = data.affiliation;
+        document.getElementById('info-name-cn').textContent = data.name;
+        document.getElementById('info-name-en').textContent = data.englishName;
+        document.getElementById('info-sub-label').textContent = data.affiliation;
+        
+        document.getElementById('stat-height').textContent = data.height;
+        document.getElementById('stat-affiliation').textContent = data.affiliation;
+        document.getElementById('stat-position').textContent = data.position;
+        document.getElementById('info-notes').innerHTML = data.notes;
+
+        // 레이더 차트 렌더링 호출
+        renderRadarChart(data.stats);
+
+        // 스킬셋 렌더링
+        const skillsContainer = document.getElementById('skills-container');
+        skillsContainer.innerHTML = data.skills.map(skill => {
+          let indicators = '';
+          for (let i = 0; i < 3; i++) {
+            indicators += `<div class="w-3 h-1 ${i < skill.level ? 'bg-black' : 'bg-[var(--line)]'}"></div>`;
+          }
+          return `
+            <!-- 고정 높이 h-[80px] 및 압축 방지 shrink-0 속성 부여 완료 -->
+            <div class="flex h-[70px] shrink-0 border border-[var(--line-strong)] bg-[rgba(255,255,255,0.4)] px-3 items-center hover:bg-white hover:border-black transition-colors group cursor-pointer relative overflow-hidden">
+              <div class="absolute top-0 left-0 w-1 h-full bg-black scale-y-0 group-hover:scale-y-100 transition-transform origin-top"></div>
+              <div class="w-12 h-12 border border-[var(--line)] bg-transparent text-black flex items-center justify-center shrink-0 group-hover:bg-black group-hover:text-white transition-colors">
+                <i data-lucide="${skill.icon}" class="w-6 h-6"></i>
+              </div>
+              <div class="ml-5 flex-1">
+                <h4 class="text-black font-bold text-sm tracking-[2px] uppercase">${skill.name}</h4>
+                <p class="text-[var(--sub)] text-xs mt-1 tracking-[1px] font-medium">${skill.desc}</p>
+              </div>
+              <div class="flex gap-[2px] pr-2">
+                ${indicators}
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        lucide.createIcons();
+
+        leftPage.classList.remove('fade-out');
+        rightPage.classList.remove('fade-out');
+      }, 250);
+    }
+
+    /* 4. RADAR CHART ENGINE */
+    function renderRadarChart(statsData) {
+      const size = 250;
+      const center = size / 2;
+      const maxRadius = 55;
+      const levels = 4;
+      const angles = [-Math.PI / 2, -Math.PI / 6, Math.PI / 6, Math.PI / 2, 5 * Math.PI / 6, 7 * Math.PI / 6];
+
+      const getPoint = (angle, radius) => ({
+        x: center + radius * Math.cos(angle),
+        y: center + radius * Math.sin(angle)
+      });
+
+      const svgEl = document.getElementById('radar-chart-svg');
+      let svgContent = '';
+
+      for (let i = levels; i >= 1; i--) {
+        const r = (maxRadius / levels) * i;
+        const points = angles.map(a => `${getPoint(a, r).x},${getPoint(a, r).y}`).join(' ');
+        svgContent += `<polygon points="${points}" fill="transparent" stroke="rgba(0,0,0,0.15)" stroke-width="1" />`;
+      }
+
+      angles.forEach(angle => {
+        const pt = getPoint(angle, maxRadius);
+        svgContent += `<line x1="${center}" y1="${center}" x2="${pt.x}" y2="${pt.y}" stroke="rgba(0,0,0,0.15)" stroke-width="1" />`;
+      });
+
+      const dataPoints = statsData.map((stat, i) => {
+        const r = (stat.value / 100) * maxRadius;
+        return `${getPoint(angles[i], r).x},${getPoint(angles[i], r).y}`;
+      }).join(' ');
+      svgContent += `<polygon points="${dataPoints}" fill="rgba(0,0,0,0.1)" stroke="#000" stroke-width="2" />`;
+
+      statsData.forEach((stat, i) => {
+        const r = (stat.value / 100) * maxRadius;
+        const pt = getPoint(angles[i], r);
+        svgContent += `<rect x="${pt.x - 3}" y="${pt.y - 3}" width="6" height="6" fill="#000" />`;
+      });
+
+      svgEl.innerHTML = svgContent;
+
+      const labelsContainer = document.getElementById('radar-chart-labels');
+      const labelRadius = maxRadius + 18; 
+      let labelsHtml = '';
+
+      statsData.forEach((stat, i) => {
+        let offsetX = 0, offsetY = 0;
+        if (i === 0) offsetY = -14;
+        if (i === 1) { offsetX = 12; offsetY = -8; }
+        if (i === 2) { offsetX = 12; offsetY = 8; }
+        if (i === 3) offsetY = 14;
+        if (i === 4) { offsetX = -12; offsetY = 8; }
+        if (i === 5) { offsetX = -12; offsetY = -8; }
+
+        const pt = getPoint(angles[i], labelRadius);
+        labelsHtml += `
+          <div class="absolute flex flex-col items-center justify-center transform -translate-x-1/2 -translate-y-1/2 w-[60px]" 
+               style="left: ${pt.x + offsetX}px; top: ${pt.y + offsetY}px">
+            <span class="text-black font-bold text-[11px] tracking-[1px] text-center">${stat.label}</span>
+            <span class="text-[var(--sub)] text-[8px] tracking-[1px] scale-90 mt-0.5">${stat.sub}</span>
+            <span class="text-xs font-orbitron font-bold mt-0.5 text-black">${stat.grade}</span>
+          </div>
+        `;
+      });
+      labelsContainer.innerHTML = labelsHtml;
+    }
+
+    /* 5. SIDEBAR SETUP */
+    const sidebarIconsContainer = document.getElementById('sidebar-icons');
+    sidebarIconsContainer.innerHTML = CHARACTERS.map((char, index) => `
+      <div class="sidebar-icon-btn shrink-0" data-index="${index}" title="${char.name} (${char.englishName})">
+        <i data-lucide="${char.icon}" class="w-6 h-6"></i>
+      </div>
+    `).join('');
+
+    document.querySelectorAll('.sidebar-icon-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const targetIndex = parseInt(e.currentTarget.getAttribute('data-index'));
+        currentIdx = targetIndex;
+        renderCharacter(currentIdx);
+      });
+    });
+
+    /* 6. SCROLL CONTROLLER */
+    window.addEventListener('wheel', (e) => {
+      if (isScrollThrottled) return;
+      if (e.deltaY > 20) {
+        if (currentIdx < CHARACTERS.length - 1) {
+          isScrollThrottled = true;
+          currentIdx++;
+          renderCharacter(currentIdx);
+          setTimeout(() => { isScrollThrottled = false; }, 600);
+        }
+      } else if (e.deltaY < -20) {
+        if (currentIdx > 0) {
+          isScrollThrottled = true;
+          currentIdx--;
+          renderCharacter(currentIdx);
+          setTimeout(() => { isScrollThrottled = false; }, 600);
+        }
+      }
+    }, { passive: true });
+
+    renderCharacter(currentIdx);
+  </script>
+</body>
+</html>
