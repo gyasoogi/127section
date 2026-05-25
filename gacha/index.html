@@ -1,199 +1,269 @@
 <!DOCTYPE html>
-<!-- 
-  1. 외부 파일(CSS, 폰트)을 읽는 순간부터 브라우저 백색 화면(White Flash)을 
-     사전에 완벽 차단하기 위해 html 태그 자체에 즉시 검은색 배경 주입 
--->
-<html lang="ko" style="background-color: #000000 !important;">
+<html lang="ko">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>127section - Gacha</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800&family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- 내부 핵심 강제 암전 제어 스타일 -->
-    <style>
-        #boot-black {
-            position: fixed !important;
-            inset: 0 !important;
-            background: #000000 !important;
-            z-index: 9999999 !important;
-            opacity: 1 !important;
-            transition: opacity 0.3s ease-out !important;
-            pointer-events: none !important;
-        }
-        #boot-black.fade-out {
-            opacity: 0 !important;
-        }
-    </style>
+  <title>127 SECTION // TACTICAL GACHA</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;800&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css" />
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script defer src="script.js"></script>
 </head>
-<!-- 2. body가 열리는 순간에도 강제 검은색 배경을 유지하도록 초기 설정 -->
-<body style="margin:0; padding:0; background-color: #000000 !important;">
+<body>
 
-    <!-- 3. 화면을 최상위에서 덮고 있을 암전 레이어 -->
-    <div id="boot-black"></div>
+<div id="boot-overlay"></div>
 
-    <div class="screen-transition"></div>
-    <div id="entry-fade-overlay"></div>
-    <div id="exit-fade-overlay"></div>
+<div id="ui-scale-wrapper">
 
-    <div id="stage">
-        <div class="hud">
-            <div class="corner tl"></div>
-            <div class="corner tr"></div>
-            <div class="corner bl"></div>
-            <div class="corner br"></div>
+  <div class="background-map"></div>
+  <div class="map-noise"></div>
+  <div class="vignette"></div>
+
+  <div class="hud">
+    <div class="grid"></div>
+    <div class="scan-lines"></div>
+    <div class="noise-overlay"></div>
+
+    <div class="crosshair horizontal"></div>
+    <div class="crosshair vertical"></div>
+
+    <div class="radar radar-1"></div>
+    <div class="radar radar-2"></div>
+    <div class="radar radar-3"></div>
+
+    <div class="hud-corner tl"></div>
+    <div class="hud-corner tr"></div>
+    <div class="hud-corner bl"></div>
+    <div class="hud-corner br"></div>
+  </div>
+
+  <header class="top-bar">
+
+    <div class="system-left">
+      <div class="system-id">
+        <span class="id-big">127</span>
+
+        <div class="id-text">
+          <span>TACTICAL GACHA</span>
+          <span>SIMULATION CONTROL SYSTEM</span>
+        </div>
+      </div>
+
+      <div class="top-tags">
+        <div class="tag">
+          <span class="tag-label">STATUS</span>
+          <span class="tag-value active">ONLINE</span>
         </div>
 
-        <div class="crosswalk-scene">
-            <div class="crosswalk-road">
-                <div class="crosswalk-track"></div>
-            </div>
+        <div class="tag">
+          <span class="tag-label">SECTOR</span>
+          <span class="tag-value">09-A</span>
         </div>
-
-        <div id="ssr-masonry-overlay">
-            <div id="masonry-list" class="masonry-list"></div>
-        </div>
-
-        <div id="loading-screen">
-            <div class="loader"></div>
-            <div class="loading-text">HARMONY SYSTEM INITIALIZING</div>
-        </div>
-
-        <div id="bg1" class="bg-layer"></div>
-        <div id="bg2" class="bg-layer" style="opacity:0"></div>
-
-        <div class="main">
-            <div class="sidebar" id="sidebar">
-                <a href="../index.html" class="sidebar-logo cursor-target">back to main</a>
-            </div>
-
-            <div class="content">
-                <div class="top-ui">
-                    <div class="counter">
-                        TOTAL : <span id="total-count">0</span>
-                    </div>
-                </div>
-
-                <div class="banner-panel">
-                    <div class="system-no">01</div>
-                    <h1 id="banner-title">HARMONY</h1>
-                    <div class="pickup" id="pickup-text">헤드라인</div>
-                    <div class="desc" id="banner-desc"></div>
-
-                    <div class="pity-box">
-                        <div class="pity" id="pity-ssr">SSR 확정까지 : <b>80</b>회</div>
-                        <div class="pity" id="pity-sr">SR 확정까지 : <b>10</b>회</div>
-                        <div class="pity" id="pity-pickup">픽업 확정까지 : <b>150</b>회</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bottom-ui">
-                <button
-                    id="debug-pickup-btn"
-                    class="ui-btn debug-btn"
-                    onclick="toggleDebugPickup(); event.stopPropagation();"
-                >
-                    DEBUG PICKUP : OFF
-                </button>
-                <button class="ui-btn" onclick="toggleRate(true); event.stopPropagation();">확률 안내</button>
-                <button class="ui-btn" onclick="runGacha(1); event.stopPropagation();">1회 뽑기</button>
-                <button class="ui-btn" onclick="runGacha(10); event.stopPropagation();">10회 뽑기</button>
-                <button class="ui-btn" onclick="toggleInventory(true); event.stopPropagation();">INVENTORY</button>
-            </div>
-        </div>
-
-        <div id="gacha-overlay">
-            <div class="scan-line"></div>
-            <div class="scan-ring"></div>
-            <div class="flash-wrap">
-                <div class="flash-noise"></div>
-                <div class="flash-text">
-                    <span>1</span><span>2</span><span>7</span><span>SECTION</span>
-                </div>
-            </div>
-        </div>
-
-        <div id="single-reveal">
-            <div id="reveal-content"></div>
-        </div>
-
-        <div id="result-screen" onclick="closeResult(); event.stopPropagation();">
-            <div class="grid" id="result-grid"></div>
-            <div class="tap-to-close">TAP TO CLOSE</div>
-        </div>
-
-        <div id="ssr-preview" onclick="toggleSSRPreview(false)">
-            <div id="ssr-preview-image"></div>
-        </div>
-
-        <div id="rate-popup" onclick="toggleRate(false)">
-            <div class="rate-box" onclick="event.stopPropagation()">
-                <h2 class="rate-title">[ 소환 확률 안내 ]</h2>
-                <div class="rate-section">
-                    <div class="rate-heading">1. 등급별 획득 확률</div>
-                    <div class="rate-line ssr-rate">SSR: 1%</div>
-                    <div class="rate-line sr-rate">SR: 13%</div>
-                    <div class="rate-line r-rate">R: 86%</div>
-                </div>
-                <div class="rate-section">
-                    <div class="rate-heading">2. SSR 코스튬 상세 확률</div>
-                    <div class="rate-desc">SSR 등장 시, 아래의 확률에 따라 코스튬가 결정됩니다.</div>
-                    <div class="rate-line">픽업 코스튬 (1종): 0.5% (SSR의 50%)</div>
-                    <div class="rate-line">일반 SSR (6종): 각 0.083% (SSR의 50%를 배분)</div>
-                </div>
-                <div class="rate-note">※ 소환 1회당 개별 확률이 적용됩니다.</div>
-            </div>
-        </div>
-
-        <div id="inv-overlay"></div>
-
-        <div id="inv-panel">
-            <div class="inv-header">
-                <h2 class="inv-title">INVENTORY</h2>
-                <div style="display:flex; align-items:center; gap:12px;">
-                    <select id="inv-sort" onchange="renderInventory()">
-                        <option value="rarity">희귀도순</option>
-                        <option value="count">획득량순</option>
-                    </select>
-                    <button class="ui-btn" onclick="toggleInventory(false)">CLOSE</button>
-                </div>
-            </div>
-            <div id="inv-grid" class="inv-grid"></div>
-        </div>
+      </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="script.js"></script>
+    <div class="system-right">
+      <div class="mini-stat">
+        <span class="mini-label">TOTAL PULL</span>
+        <span class="mini-value" id="total-count">0</span>
+      </div>
 
-    <!-- 4. 즉시 실행하여 0.1초 제어 및 원래 웹 사이트 스타일 복구 스크립트 -->
-    <script>
-        // DOM 트리 파싱이 끝나자마자 타이머를 돌려 시간 지연을 최소화합니다.
-        document.addEventListener("DOMContentLoaded", () => {
-            const bootBlack = document.getElementById('boot-black');
-            if (bootBlack) {
-                setTimeout(() => {
-                    bootBlack.classList.add('fade-out'); // 0.1초 대기 후 페이드아웃 애니메이션 시작
-                    
-                    setTimeout(() => {
-                        bootBlack.remove(); // 애니메이션 완료(300ms) 후 DOM에서 제거
-                        
-                        // 암전 제어가 완벽히 끝나면 html과 body에 걸려있던 강제 검은색 속성을 제거하여
-                        // style.css에 정의된 원래 배경(회색/격자 무늬 등) 디자인이 노출되도록 복구합니다.
-                        document.documentElement.style.setProperty('background-color', '', 'important');
-                        document.body.style.setProperty('background-color', '', 'important');
-                    }, 300);
-                }, 100); // 0.1초(100ms) 유지 시간 조건
-            }
+      <div class="mini-stat">
+        <span class="mini-label">CREDITS</span>
+        <span class="mini-value yellow" id="credit-count">27614</span>
+      </div>
 
-            // 기존 코드 안정화 제어
-            const transitionEl = document.querySelector('.screen-transition');
-            if (transitionEl) {
-                transitionEl.classList.add('reveal');
-            }
-        });
-    </script>
+      <div class="mini-stat">
+        <span class="mini-label">SSR RATE</span>
+        <span class="mini-value yellow">1.00%</span>
+      </div>
+
+      <div class="mini-stat">
+        <span class="mini-label">MODE</span>
+        <span class="mini-value red">TACTICAL</span>
+      </div>
+    </div>
+
+  </header>
+
+  <main class="main-layout">
+
+    <aside class="left-panel">
+
+      <div class="panel-header">
+        BANNER SELECT
+      </div>
+
+      <div class="banner-list" id="banner-list"></div>
+
+      <div class="side-info">
+        <span>LOCATION : SECTOR 09</span>
+        <span>OBJECTIVE : SIGNAL EXTRACTION</span>
+        <span>MISSION : ACTIVE</span>
+      </div>
+
+    </aside>
+
+    <section class="center-stage">
+
+      <div class="target-system">
+        <div class="target-ring ring-a"></div>
+        <div class="target-ring ring-b"></div>
+        <div class="target-ring ring-c"></div>
+
+        <div class="target-center"></div>
+      </div>
+
+      <div class="banner-panel">
+
+        <div class="panel-no" id="panel-no">01</div>
+
+        <div class="panel-top">
+          <div>
+            <div class="panel-subtitle">TACTICAL PICKUP</div>
+            <h1 id="banner-title">DRONE</h1>
+          </div>
+
+          <div class="panel-chip">LIVE</div>
+        </div>
+
+        <div class="banner-preview">
+          <img id="banner-image" src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1400&auto=format&fit=crop" alt="banner">
+
+          <div class="banner-overlay"></div>
+
+          <div class="preview-line"></div>
+          <div class="preview-box"></div>
+        </div>
+
+        <div class="banner-info">
+          <div class="pickup-title" id="pickup-title">
+            DRONE COSTUME
+          </div>
+
+          <div class="banner-desc" id="banner-desc">
+            폐허 도시 내부에서 발견된 전술 프로토콜. 교란형 코스튬 및 제어 장비를 획득할 수 있습니다.
+          </div>
+        </div>
+
+        <div class="pity-grid">
+          <div class="pity-card">
+            <span>SSR GUARANTEE</span>
+            <b id="pity-ssr">80</b>
+          </div>
+
+          <div class="pity-card">
+            <span>SR GUARANTEE</span>
+            <b id="pity-sr">10</b>
+          </div>
+
+          <div class="pity-card">
+            <span>PICKUP GUARANTEE</span>
+            <b id="pity-pickup">150</b>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="floating-box data-a">
+        <span class="num">01</span>
+        <span class="txt">TRACKING ACTIVE</span>
+      </div>
+
+      <div class="floating-box data-b">
+        <span class="num">08</span>
+        <span class="txt">SIGNAL LOCKED</span>
+      </div>
+
+    </section>
+
+    <aside class="right-panel">
+
+      <div class="panel-title">
+        COMMAND
+      </div>
+
+      <div class="panel-sub">
+        SYSTEM ACCESS
+      </div>
+
+      <div class="command-grid">
+
+        <button class="command-card cursor-target" onclick="runGacha(1)">
+          <span class="command-main">1 PULL</span>
+          <span class="command-sub">160 CREDIT CONSUME</span>
+        </button>
+
+        <button class="command-card cursor-target" onclick="runGacha(10)">
+          <span class="command-main">10 PULL</span>
+          <span class="command-sub">1600 CREDIT CONSUME</span>
+        </button>
+
+        <button class="command-card large active-card cursor-target" onclick="toggleInventory(true)">
+          <span class="command-main">INVENTORY</span>
+          <span class="command-sub">DATABASE ACCESS</span>
+        </button>
+
+      </div>
+
+      <div class="server-status">
+        <div class="status-dot"></div>
+        <span>SERVER STATUS ONLINE</span>
+      </div>
+
+    </aside>
+
+  </main>
+
+  <footer class="bottom-bar">
+    <div>SAT / POS / LAT</div>
+    <div>CONNECTION : STABLE</div>
+    <div>BUILD 04.23.198</div>
+  </footer>
+
+</div>
+
+<div id="result-screen">
+  <div class="result-header">
+    <span>GACHA RESULT</span>
+    <button onclick="closeResult()">CLOSE</button>
+  </div>
+
+  <div class="result-grid" id="result-grid"></div>
+</div>
+
+<div id="inventory-overlay">
+  <div id="inventory-panel">
+
+    <div class="inventory-header">
+      <h2>INVENTORY</h2>
+
+      <div class="inventory-actions">
+        <select id="sort-select" onchange="renderInventory()">
+          <option value="rarity">희귀도순</option>
+          <option value="count">획득량순</option>
+        </select>
+
+        <button onclick="toggleInventory(false)">CLOSE</button>
+      </div>
+    </div>
+
+    <div class="inventory-grid" id="inventory-grid"></div>
+
+  </div>
+</div>
+
+<div id="target-cursor">
+  <div class="cursor-dot"></div>
+  <div class="cursor-box"></div>
+</div>
+
 </body>
 </html>
