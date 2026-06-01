@@ -4,204 +4,516 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-  <title>127 SECTION</title>
+  <title>127 SECTION // TACTICAL UI</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;800&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css"/>
 
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 </head>
+
 <body>
 
-  <div id="ui-scale-wrapper">
-  <!-- HUD -->
+<div id="ui-scale-wrapper">
+
+  <div class="background-map"></div>
+  <div class="map-noise"></div>
+  <div class="vignette"></div>
+
   <div class="hud">
 
-    <div class="hud-circle c1"></div>
-    <div class="hud-circle c2"></div>
-    <div class="hud-circle c3"></div>
-
-    <div class="scan-lines"></div>
     <div class="grid"></div>
+    <div class="scan-lines"></div>
+    <div class="noise-overlay"></div>
 
-    <div class="center-cross horizontal"></div>
-    <div class="center-cross vertical"></div>
+    <div class="crosshair horizontal"></div>
+    <div class="crosshair vertical"></div>
 
-    <div class="frame tl"></div>
-    <div class="frame tr"></div>
-    <div class="frame bl"></div>
-    <div class="frame br"></div>
+    <div class="radar radar-1"></div>
+    <div class="radar radar-2"></div>
+    <div class="radar radar-3"></div>
 
-    <div class="measure left"></div>
-    <div class="measure right"></div>
+    <div class="hud-corner tl"></div>
+    <div class="hud-corner tr"></div>
+    <div class="hud-corner bl"></div>
+    <div class="hud-corner br"></div>
 
   </div>
 
-  <!-- TOP -->
-  <header class="top-ui">
+  <header class="top-bar">
 
-    <div class="system-mark">
-      <div class="system-number">01</div>
-      <div class="system-info">
-        <span>127 SECTION</span>
-        <span>FUTURE INTERFACE</span>
+    <div class="system-left">
+
+      <div class="system-id">
+        <span class="id-big">127</span>
+
+        <div class="id-text">
+          <span>SECTION</span>
+          <span>SIMULATOR SYSTEM</span>
+        </div>
       </div>
+
     </div>
 
-    <div class="top-stats">
+    <div class="system-right">
 
-      <div class="stat-box cursor-target">
-        <span class="label">CREDITS</span>
-        <span class="value">27614</span>
+      <div class="mini-stat">
+        <span class="mini-label">CREDITS</span>
+        <span class="mini-value">$27,614</span>
       </div>
 
-      <div class="stat-box cursor-target">
-        <span class="label">ORIGIN</span>
-        <span class="value">1205</span>
+      <div class="mini-stat">
+        <span class="mini-label">DIFFICULT</span>
+        <span class="mini-value red">HARD</span>
       </div>
 
-      <div class="stat-box small cursor-target">
-        <span class="value">4+</span>
+      <div class="mini-stat">
+        <span class="mini-label">NAME</span>
+        <span class="mini-value">UNKWNON</span>
       </div>
 
     </div>
 
   </header>
 
-  <!-- MAIN -->
-  <main class="layout">
+  <main class="main-layout">
 
-    <!-- LEFT -->
-    <aside class="left-ui">
+    <aside class="left-panel">
 
-      <div class="side-label">
-        SYSTEM STATUS
+      <div class="panel-header"></div>
+
+      <div class="event-card">
+
+        <div class="event-top">
+          <span>MEETUP</span>
+          <span class="small-icon"></span>
+        </div>
+
+        <div class="event-image">
+
+          <img
+            src="https://images.unsplash.com/photo-1514565131-fce0801e5785?q=80&w=1200&auto=format&fit=crop"
+            alt="event"
+          >
+
+          <div class="event-overlay"></div>
+
+          <div class="event-scribble scribble-1"></div>
+          <div class="event-scribble scribble-2"></div>
+          <div class="event-scribble scribble-3"></div>
+
+        </div>
+
+        <div class="event-bottom">
+
+          <div class="event-title">
+            TOTAL EVENTS
+          </div>
+
+          <div class="event-meta">
+            <div class="event-box">A+ x2</div>
+          </div>
+
+          <button class="action-button start-button cursor-target" href="#start">
+            VIEW EVENTS
+          </button>
+
+        </div>
+
       </div>
 
-      <div class="vertical-text">
-        TERMINAL / ACTIVE
-      </div>
+      <div class="side-info">
 
-      <div class="left-dots">
-        <span></span>
-        <span></span>
-        <span class="active"></span>
-        <span></span>
+        <span>LOCATION : SECTOR 09</span>
+        <span>OBJECTIVE : TRACK SIGNAL</span>
+        <span>MISSION : ACTIVE</span>
+
       </div>
 
     </aside>
 
-    <!-- CENTER -->
     <section class="center-stage">
 
-      <div class="center-rings"></div>
+      <div class="target-system">
 
-      <div class="character-area">
+        <div class="target-ring ring-a"></div>
+        <div class="target-ring ring-b"></div>
+        <div class="target-ring ring-c"></div>
 
-        <div class="image-mask">
+        <div class="target-center"></div>
 
-          <img
-            src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA0MTBfMjYg%2FMDAxNzQ0Mjg5NTQ3MzU5.eyAJveQ1b5JXE6kozdDXm41V5S-XShVeQiKtHkT6T0Ag.k9nQTSyDB_O5Ob2vQemxi1xBEsiSoOni1RyDPMyVrgUg.JPEG%2F1744289542138.jpg&type=sc960_832"
-            alt="character"
-            class="character-image"
-          >
+        <div class="target-arrow top"></div>
+        <div class="target-arrow bottom"></div>
+        <div class="target-arrow left"></div>
+        <div class="target-arrow right"></div>
 
-          <div class="image-glitch"></div>
+      </div>
 
+      <div class="map-marker marker-1">
+        <div class="pulse"></div>
+      </div>
+
+      <div class="map-marker marker-2 yellow">
+        <div class="pulse"></div>
+      </div>
+
+      <div class="map-marker marker-3">
+        <div class="pulse"></div>
+      </div>
+
+      <div class="floating-box data-a">
+        <span class="num">01</span>
+        <span class="txt">DISTANCE 81M</span>
+      </div>
+
+      <div class="floating-box data-b">
+        <span class="num">08</span>
+        <span class="txt">ZONE ACTIVE</span>
+      </div>
+
+      <div class="floating-box data-c">
+        <span class="num">06</span>
+        <span class="txt">TRACKING</span>
+      </div>
+
+      <div class="camera-feed">
+
+        <div class="feed-label">
+          CAMFEED / LIVE
         </div>
 
-        <div class="target-box"></div>
+        <img
+          src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?q=80&w=1200&auto=format&fit=crop"
+          alt="feed"
+        >
 
-      </div>
-
-      <div class="floating-data left-data">
-        <span>2017</span>
-        <span>2018</span>
-        <span>2019</span>
-        <span>2020</span>
-      </div>
-
-      <div class="floating-data right-data">
-        <span>NODE</span>
-        <span>TYPE-A</span>
-        <span>ACTIVE</span>
       </div>
 
     </section>
 
-    <!-- RIGHT -->
-    <section class="menu-ui">
+    <aside class="right-panel">
 
-      <div class="menu-title">
-        DESIGN
+      <div class="panel-title">
+        COMMAND
       </div>
 
-      <div class="menu-sub">
-        INSERT COIN
+      <div class="panel-sub">
+        MODE SELECT
       </div>
 
-      <div class="menu-grid">
+      <div class="command-grid">
 
-        <a href="inventory/index.html" class="menu-card primary top-left cursor-target">
-          <span class="main">INVENTORY</span>
-          <span class="sub">SYSTEM ACCESS</span>
+        <a href="#" class="command-card cursor-target">
+          <span class="command-main">INVENTORY</span>
+          <span class="command-sub">SYSTEM ACCESS</span>
         </a>
 
-        <a href="#" class="menu-card top-right cursor-target">
-          <span class="main">INFORM</span>
-          <span class="sub">RECRUIT</span>
+        <a href="#" class="command-card cursor-target">
+          <span class="command-main">INFORM</span>
+          <span class="command-sub">RECRUIT</span>
         </a>
 
-        <a href="gacha/index.html"
-          class="menu-card large-bottom accent cursor-target start-button">
-          <span class="main">START OPERATION</span>
-          <span class="sub">BEGIN MISSION</span>
+        <a href="gacha/index.html" class="command-card large active-card start-button cursor-target">
+          <span class="command-main">START OPERATION</span>
+          <span class="command-sub">BEGIN MISSION</span>
         </a>
 
       </div>
 
-      <div class="bottom-hearts">
-        <span class="heart active"></span>
-        <span class="heart active"></span>
-        <span class="heart active"></span>
-        <span class="heart"></span>
+      <div class="server-status">
+        <div class="status-dot"></div>
+        <span>SERVER STATUS ONLINE</span>
       </div>
 
-    </section>
+    </aside>
 
   </main>
 
-  <!-- BOTTOM -->
-  <footer class="bottom-ui">
-
-    <div>HI SCORE / 19009304</div>
-    <div>2019 / 04 / 03</div>
-
+  <footer class="bottom-bar">
+    <div class="bottom-left">SAT / POS / LAT</div>
+    <div class="bottom-center">CONNECTION : GOOD</div>
+    <div class="bottom-right">BUILD 04.23.198</div>
   </footer>
 
+</div>
+
+<div class="screen-transition"></div>
+
+<div id="target-cursor">
+  <div class="target-cursor-dot"></div>
+  
+  <div class="cursor-rotator">
+    <div class="target-cursor-corner tl"></div>
+    <div class="target-cursor-corner tr"></div>
+    <div class="target-cursor-corner br"></div>
+    <div class="target-cursor-corner bl"></div>
   </div>
+</div>
 
-  <div id="target-cursor" class="target-cursor-wrapper">
+<script>
+/* ========================================================
+   배경 및 루프 애니메이션 (기존 인라인 코드 유지)
+======================================================== */
+gsap.to(".radar-1", {
+  rotation: 360,
+  duration: 30,
+  repeat: -1,
+  ease: "none"
+});
 
-    <div class="cursor-rotator">
+gsap.to(".radar-2", {
+  rotation: -360,
+  duration: 20,
+  repeat: -1,
+  ease: "none"
+});
 
-      <div class="target-cursor-dot"></div>
+gsap.to(".pulse", {
+  scale: 2,
+  opacity: 0,
+  duration: 2,
+  repeat: -1,
+  stagger: .4,
+  ease: "power1.out"
+});
 
-      <div class="target-cursor-corner corner-tl"></div>
-      <div class="target-cursor-corner corner-tr"></div>
-      <div class="target-cursor-corner corner-br"></div>
-      <div class="target-cursor-corner corner-bl"></div>
+gsap.to(".scan-lines", {
+  backgroundPositionY: "100px",
+  duration: 6,
+  repeat: -1,
+  ease: "none"
+});
 
-    </div>
 
-  </div>
+/* ========================================================
+   전달받은 자바스크립트 스크립트 연결 및 통합
+======================================================== */
+const config = {
+  targetSelector: '.cursor-target',
+  spinDuration: 2,
+  hideDefaultCursor: true,
+  hoverDuration: 0.2,
+  parallaxOn: true
+};
 
-  <script src="script.js"></script>
+const constants = {
+  borderWidth: 3,
+  cornerSize: 12
+};
 
-  <div class="screen-transition"></div>
+const isMobileDevice = () => {
+  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+};
+
+function initTargetCursor() {
+  if (isMobileDevice()) {
+    const cursor = document.getElementById('target-cursor');
+    if (cursor) {
+      cursor.style.display = 'none';
+    }
+    return;
+  }
+
+  const cursor = document.getElementById('target-cursor');
+  if (!cursor) return;
+
+  const rotator = cursor.querySelector('.cursor-rotator');
+  const dot = cursor.querySelector('.target-cursor-dot');
+  const corners = Array.from(cursor.querySelectorAll('.target-cursor-corner'));
+
+  let spinTl = null;
+  let activeTarget = null;
+
+  document.body.style.cursor = 'none';
+
+  /* 초기 위치 */
+  gsap.set(cursor, {
+    xPercent: -50,
+    yPercent: -50,
+    x: window.innerWidth / 2,
+    y: window.innerHeight / 2
+  });
+
+  /* 회전 애니메이션 생성 함수 */
+  const createSpin = () => {
+    if (spinTl) {
+      spinTl.kill();
+    }
+    spinTl = gsap.timeline({ repeat: -1 });
+    spinTl.to(rotator, {
+      rotation: '+=360',
+      duration: config.spinDuration,
+      ease: 'none'
+    });
+  };
+
+  createSpin();
+
+  /* 커서 이동 */
+  window.addEventListener('mousemove', (e) => {
+    gsap.to(cursor, {
+      x: e.clientX,
+      y: e.clientY,
+      duration: 0.1,
+      ease: 'power3.out'
+    });
+  });
+
+  /* 클릭 애니메이션 */
+  window.addEventListener('mousedown', () => {
+    gsap.to(dot, { scale: 0.6, duration: 0.2 });
+    gsap.to(cursor, { scale: 0.9, duration: 0.2 });
+  });
+
+  window.addEventListener('mouseup', () => {
+    gsap.to(dot, { scale: 1, duration: 0.2 });
+    gsap.to(cursor, { scale: 1, duration: 0.2 });
+  });
+
+  /* hover 추적 */
+  const tickerFn = () => {
+    if (!activeTarget) return;
+
+    const rect = activeTarget.getBoundingClientRect();
+    const cursorX = gsap.getProperty(cursor, 'x');
+    const cursorY = gsap.getProperty(cursor, 'y');
+
+    const targetCornerPositions = [
+      { x: rect.left - constants.borderWidth, y: rect.top - constants.borderWidth },
+      { x: rect.right + constants.borderWidth - constants.cornerSize, y: rect.top - constants.borderWidth },
+      { x: rect.right + constants.borderWidth - constants.cornerSize, y: rect.bottom + constants.borderWidth - constants.cornerSize },
+      { x: rect.left - constants.borderWidth, y: rect.bottom + constants.borderWidth - constants.cornerSize }
+    ];
+
+    corners.forEach((corner, i) => {
+      const targetX = targetCornerPositions[i].x - cursorX;
+      const targetY = targetCornerPositions[i].y - cursorY;
+
+      gsap.to(corner, {
+        x: targetX,
+        y: targetY,
+        duration: 0.18,
+        ease: 'power2.out',
+        overwrite: true
+      });
+    });
+  };
+
+  /* hover 시작 */
+  window.addEventListener('mouseover', (e) => {
+    const target = e.target.closest(config.targetSelector);
+    if (!target) return;
+    if (activeTarget === target) return;
+
+    activeTarget = target;
+    gsap.ticker.add(tickerFn);
+
+    /* 회전 정지 */
+    if (spinTl) {
+      spinTl.kill();
+      spinTl = null;
+    }
+
+    /* hover 시 정방향으로 복귀 */
+    gsap.to(rotator, {
+      rotation: 0,
+      duration: 0.25,
+      ease: 'power2.out'
+    });
+
+    /* hover 해제 */
+    target.addEventListener('mouseleave', () => {
+      activeTarget = null;
+      gsap.ticker.remove(tickerFn);
+
+      /* 코너 원위치 (기본 사각형 형태 배치) */
+      const positions = [
+        { x: -18, y: -18 },
+        { x: 6, y: -18 },
+        { x: 6, y: 6 },
+        { x: -18, y: 6 }
+      ];
+
+      corners.forEach((corner, index) => {
+        gsap.to(corner, {
+          x: positions[index].x,
+          y: positions[index].y,
+          duration: 0.3,
+          ease: 'power3.out'
+        });
+      });
+
+      /* 회전값 유지 */
+      const currentRotation = gsap.getProperty(rotator, 'rotation');
+      gsap.set(rotator, {
+        rotation: currentRotation % 360
+      });
+
+      /* 회전 재시작 */
+      createSpin();
+    }, { once: true });
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initTargetCursor);
+
+/* SCREEN TRANSITION */
+document.addEventListener('DOMContentLoaded', () => {
+  const transitionEl = document.querySelector('.screen-transition');
+  const startButtons = document.querySelectorAll('.start-button');
+
+  /* 페이지 진입 */
+  window.addEventListener('load', () => {
+    if (!transitionEl) return;
+    transitionEl.classList.add('reveal');
+  });
+
+  /* 페이지 이동 */
+  startButtons.forEach(btn => {
+    if (transitionEl) {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetUrl = btn.getAttribute('href');
+
+        transitionEl.classList.remove('reveal');
+        transitionEl.classList.add('active');
+
+        setTimeout(() => {
+          window.location.href = targetUrl;
+        }, 700);
+      });
+    }
+  });
+});
+
+/* DYNAMIC SCREEN SCALING */
+function autoScaleUI() {
+  const wrapper = document.getElementById('ui-scale-wrapper');
+  if (!wrapper) return;
+
+  const baseWidth = 1920;
+  const baseHeight = 1080;
+  const windowWidth = window.innerWidth;
+  const windowHeight = window.innerHeight;
+
+  const scaleX = windowWidth / baseWidth;
+  const scaleY = windowHeight / baseHeight;
+  const CSSscale = Math.min(scaleX, scaleY);
+
+  gsap.set(wrapper, {
+    xPercent: -50,
+    yPercent: -50,
+    scale: CSSscale
+  });
+}
+
+window.addEventListener('resize', autoScaleUI);
+document.addEventListener('DOMContentLoaded', autoScaleUI);
+</script>
+
 </body>
 </html>
