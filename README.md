@@ -1,1 +1,11 @@
-# 127section
+help me plssssssssssssssssssssssssssssssssssss
+im gna die loooooooool
+
+THE CODE IS STILL NOT FINISHED
+ITS AT LIKE 150K CHARS ALREADY
+
+STOP LYING PLS
+
+THE VN WAS ONLY 120K
+
+THERES NO WAY THIS THING IS EVEN BIGGER LMAOOOOOOOOOO
