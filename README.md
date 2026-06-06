@@ -1,11 +1,3 @@
-help me plssssssssssssssssssssssssssssssssssss
-im gna die loooooooool
-
-THE CODE IS STILL NOT FINISHED
-ITS AT LIKE 150K CHARS ALREADY
-
-STOP LYING PLS
-
-THE VN WAS ONLY 120K
-
-THERES NO WAY THIS THING IS EVEN BIGGER LMAOOOOOOOOOO
+127섹션 시뮬레이터입니다.
+날조 80% 고증 20%
+와! 진짜 127섹션이다! 보다는... 그런 콘셉트로 개발되었다고 봐주시면 감사하겠습니다.
