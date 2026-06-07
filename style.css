@@ -290,7 +290,7 @@ body{
 .command-card:hover{ transform: translateX(8px); border-color: rgba(255,255,255,.25); background: rgba(255,255,255,.08); }
 .command-main{ font-size:1.5rem; font-weight:700; letter-spacing:2px; }
 .command-sub{ margin-top:4px; font-size:.75rem; letter-spacing:2px; opacity:.45; }
-.large{ grid-column:span 2; min-height:170px; }
+.large{ grid-column:span 2}
 .active-card{ background: rgba(215,200,74,.08); border: 1px solid rgba(215,200,74,.3); }
 .active-card::before{ background:var(--yellow); }
 .server-status{ margin-top:40px; display:flex; align-items:center; gap:12px; opacity:.65; letter-spacing:2px; }

@@ -270,6 +270,24 @@
   <div class="background-map" id="dynamic-bg"></div>
   <div class="map-noise"></div>
   <div class="vignette"></div>
+  
+  <a href="/index.html" style="
+      position: fixed;
+      left: 60px;
+      bottom: 60px;
+      z-index: 9999;
+      font-size: 1.1rem;
+      letter-spacing: 4px;
+      font-weight: 400;
+      color: rgb(255, 255, 255);
+      text-decoration: none;
+      font-family: 'Orbitron', 'Pretendard', sans-serif;
+      display: inline-block;
+      transition: transform 0.2s ease, color 0.2s ease;
+  " onmouseover="this.style.transform='scale(1.1)'; this.style.color='#f39c12';" 
+  onmouseout="this.style.transform='scale(1)'; this.style.color='#ffffff';">
+      BACK TO MAIN
+  </a>
 
   <div class="hud">
     <div class="grid"></div><div class="scan-lines"></div><div class="noise-overlay"></div>
@@ -424,12 +442,9 @@
 <button class="bug-report-btn" onclick="triggerBugReport()">BUG REPORT<br>(엔딩 강제 호출)</button>
 
 <script>
-/* ========================================================
-   GAME CONFIGURATION & STATE ENGINE
-======================================================== */
 const configState = {
   difficulty: 'easy',
-  tokens: 1000,
+  tokens: 5000, // 시작 토큰 200으로 변경
   upgrades: { capital: 1, fortify: 1, weapon: 1 }
 };
 
@@ -483,14 +498,55 @@ const difficultyData = {
 };
 
 /* ========================================================
+   [유틸리티] SSR 매핑 및 레벨별 요구 자원 계산 (추가됨)
+======================================================== */
+const unitToSSRMap = {
+  moondae: 'DRONE UNIT',
+  eugyin: 'TIGER UNIT',
+  rabin: 'RABIT UNIT',
+  ahyeon: 'GOD UNIT',
+  chongwoo: 'BOW UNIT',
+  bigsejin: 'BEAR UNIT',
+  minisejin: 'HAMSTER UNIT'
+};
+
+function getUpgradeRequirement(currentLevel) {
+  const tokenCost = 200 + (currentLevel - 1) * 150; 
+  let reqRarity = null;
+  let reqCount = 0;
+
+  if (currentLevel >= 16) {
+    reqRarity = 'SSR';
+    reqCount = currentLevel - 15;
+  } else if (currentLevel >= 11) {
+    reqRarity = 'SR';
+    reqCount = currentLevel - 10;
+  } else if (currentLevel >= 3) {
+    reqRarity = 'R';
+    reqCount = currentLevel - 2;
+  }
+
+  return { tokenCost, reqRarity, reqCount };
+}
+
+function consumeItemsByRarity(rarity, count) {
+  if (typeof inventory === 'undefined') return;
+  let remaining = count;
+  for (const [itemName, itemData] of Object.entries(inventory)) {
+    if (itemData.rarity === rarity && itemData.count > 0) {
+      const toConsume = Math.min(itemData.count, remaining);
+      inventory[itemName].count -= toConsume;
+      remaining -= toConsume;
+    }
+    if (remaining <= 0) break;
+  }
+}
+
+/* ========================================================
    [최적화] UI Element Cache 및 Dirty Checking State
 ======================================================== */
 const uiCache = {};
-const uiState = {
-  credits: -1,
-  playerHp: -1,
-  enemyHp: -1
-};
+const uiState = { credits: -1, playerHp: -1, enemyHp: -1 };
 
 function initUICache() {
   uiCache.statCredits = document.getElementById('stat-credits');
@@ -539,24 +595,92 @@ document.querySelector('.tactical-world-grid').addEventListener('mouseleave', ()
   updateIntelBriefing(configState.difficulty);
 });
 
+// 업그레이드 로직 (인벤토리 및 스케일링 연동)
 function buyPreUpgrade(type) {
-  const costs = { capital: 200, fortify: 200, weapon: 250 };
-  const cost = costs[type];
-  if (configState.tokens >= cost && configState.upgrades[type] < 5) {
-    configState.tokens -= cost; 
-    configState.upgrades[type]++; 
-    updateLobbyUI();
+  const currentLevel = configState.upgrades[type];
+  const req = getUpgradeRequirement(currentLevel);
+
+  if (configState.tokens < req.tokenCost) {
+    alert(`토큰이 부족합니다. (필요: ${req.tokenCost})`);
+    return;
   }
+
+  if (req.reqRarity) {
+    if (typeof inventory === 'undefined') {
+      alert("인벤토리 시스템이 연결되지 않았습니다.");
+      return;
+    }
+    
+    let totalAvailable = 0;
+    const availableItems = [];
+
+    for (const [key, data] of Object.entries(inventory)) {
+      if (data.rarity === req.reqRarity && data.count > 0) {
+        totalAvailable += data.count;
+        if (req.reqRarity === 'SSR') availableItems.push(`${key}(${data.count}개)`);
+      }
+    }
+
+    if (totalAvailable < req.reqCount) {
+      alert(`${req.reqRarity} 등급 유닛이 ${req.reqCount}개 필요합니다. (현재: ${totalAvailable}개)`);
+      return;
+    }
+
+    if (req.reqRarity === 'SSR') {
+      const selectedSSR = prompt(`소모할 SSR 유닛 이름을 정확히 입력하세요. (필요 수량: ${req.reqCount}개)\n보유 목록: ${availableItems.join(', ')}`);
+      
+      if (!selectedSSR || !inventory[selectedSSR] || inventory[selectedSSR].rarity !== 'SSR') {
+        alert('잘못된 입력이거나 보유하지 않은 SSR 유닛입니다.');
+        return;
+      }
+      if (inventory[selectedSSR].count < req.reqCount) {
+        alert('해당 SSR 유닛의 수량이 부족합니다.');
+        return;
+      }
+      
+      inventory[selectedSSR].count -= req.reqCount;
+    } else {
+      consumeItemsByRarity(req.reqRarity, req.reqCount);
+    }
+  }
+
+  configState.tokens -= req.tokenCost;
+  configState.upgrades[type]++;
+  updateLobbyUI();
 }
 
 function updateLobbyUI() {
   document.getElementById('lobby-tokens').innerText = `${configState.tokens} PT`;
-  document.getElementById('lvl-txt-capital').innerText = `현재: Lv.${configState.upgrades.capital} (+ ${(configState.upgrades.capital-1)*150} 시작 자원)`;
-  document.getElementById('lvl-txt-fortify').innerText = `현재: Lv.${configState.upgrades.fortify} (+ ${(configState.upgrades.fortify-1)*300} 코어 체력)`;
-  document.getElementById('lvl-txt-weapon').innerText = `현재: Lv.${configState.upgrades.weapon} (+ ${(configState.upgrades.weapon-1)*15}% 전력 강화)`;
-  document.getElementById('btn-pre-capital').disabled = configState.upgrades.capital >= 5 || configState.tokens < 200;
-  document.getElementById('btn-pre-fortify').disabled = configState.upgrades.fortify >= 5 || configState.tokens < 200;
-  document.getElementById('btn-pre-weapon').disabled = configState.upgrades.weapon >= 5 || configState.tokens < 250;
+  
+  const statsMapping = {
+    capital: { el: 'lvl-txt-capital', text: '시작 자원', mult: 150 },
+    fortify: { el: 'lvl-txt-fortify', text: '코어 체력', mult: 300 },
+    weapon:  { el: 'lvl-txt-weapon',  text: '% 전력 강화', mult: 15 }
+  };
+
+  ['capital', 'fortify', 'weapon'].forEach(type => {
+    const lvl = configState.upgrades[type];
+    const statInfo = statsMapping[type];
+    
+    document.getElementById(statInfo.el).innerText = `현재: Lv.${lvl} (+ ${(lvl-1)*statInfo.mult}${statInfo.text})`;
+
+    const req = getUpgradeRequirement(lvl);
+    const btn = document.getElementById(`btn-pre-${type}`);
+    
+    if (btn) {
+      let affordable = configState.tokens >= req.tokenCost;
+      if (affordable && req.reqRarity && typeof inventory !== 'undefined') {
+        let countCheck = 0;
+        for (const key in inventory) {
+          if (inventory[key].rarity === req.reqRarity) countCheck += inventory[key].count;
+        }
+        if (countCheck < req.reqCount) affordable = false;
+      }
+      
+      btn.disabled = !affordable;
+      btn.title = `다음 레벨 비용: ${req.tokenCost} PT${req.reqRarity ? ` + ${req.reqRarity} x${req.reqCount}` : ''}`;
+    }
+  });
 }
 
 /* ========================================================
@@ -572,7 +696,7 @@ function engageSystem() {
   typeTarget.style.display = 'block';
   typeTarget.innerText = '';
   
-  const fullText = "127SECTION_             PROTOCOL";
+  const fullText = "127SECTION_           PROTOCOL";
   let charIndex = 0;
 
   setTimeout(() => {
@@ -869,11 +993,14 @@ function cleanDeadEntities() {
 }
 
 /* ========================================================
-   SPAWN LOGIC ROUTINE
+   SPAWN LOGIC ROUTINE (SSR 보유 조건 연동)
 ======================================================== */
 function spawnUnit(type) {
+  const mappedSSR = unitToSSRMap[type];
+  const isSSROwned = typeof inventory !== 'undefined' && inventory[mappedSSR] && inventory[mappedSSR].count > 0;
+  
   const spec = unitSpecs[type];
-  if (gameState.credits < spec.cost) return;
+  if (gameState.credits < spec.cost || !isSSROwned) return;
 
   gameState.credits -= spec.cost;
   gameState.unitIdCounter++;
@@ -963,7 +1090,9 @@ function updateUI() {
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i];
       if (uiCache.btns[key]) {
-        uiCache.btns[key].disabled = currentCredits < unitSpecs[key].cost;
+        const mappedSSR = unitToSSRMap[key];
+        const isSSROwned = typeof inventory !== 'undefined' && inventory[mappedSSR] && inventory[mappedSSR].count > 0;
+        uiCache.btns[key].disabled = (currentCredits < unitSpecs[key].cost) || !isSSROwned;
       }
     }
   }
@@ -1045,15 +1174,12 @@ function showEndingCredits() {
   document.getElementById('end-overlay').style.display = 'none';
   document.getElementById('ending-credits-overlay').style.display = 'flex';
   
-  // [최적화 핵심] 
-  // 백그라운드에서 돌아가는 무거운 애니메이션을 멈춰 backdrop-filter의 매 프레임 재계산 차단
   ambientAnims.forEach(anim => anim.pause());
 }
 
 function continuePlaying() {
   document.getElementById('ending-credits-overlay').style.display = 'none';
   
-  // 게임으로 돌아갈 때 애니메이션 다시 켜기
   ambientAnims.forEach(anim => anim.play());
   resetToLobby();
 }
@@ -1071,7 +1197,7 @@ function triggerBugReport() {
 /* ========================================================
    VISUAL AMBIENT INTEGRATION (최적화 배열 캐싱)
 ======================================================== */
-const ambientAnims = []; // 애니메이션 정지를 위한 배열 선언
+const ambientAnims = [];
 
 function initAmbientAnimations() {
   ambientAnims.push(gsap.to(".radar-1", { rotation: 360, duration: 30, repeat: -1, ease: "none" }));

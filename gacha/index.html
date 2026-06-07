@@ -18,6 +18,23 @@
     <div class="background-map"></div>
     <div class="map-noise"></div>
     <div class="vignette"></div>
+    <a href="/index.html" style="
+        position: fixed;
+        left: 60px;
+        bottom: 60px;
+        z-index: 9999;
+        font-size: 1.1rem;
+        letter-spacing: 4px;
+        font-weight: 400;
+        color: rgb(255, 255, 255);
+        text-decoration: none;
+        font-family: 'Orbitron', 'Pretendard', sans-serif;
+        display: inline-block;
+        transition: transform 0.2s ease, color 0.2s ease;
+    " onmouseover="this.style.transform='scale(1.1)'; this.style.color='#f39c12';" 
+    onmouseout="this.style.transform='scale(1)'; this.style.color='#ffffff';">
+        BACK TO MAIN
+    </a>
 
     <div class="hud">
         <div class="grid"></div>
@@ -180,11 +197,6 @@
     </div>
     <div id="inv-grid" class="inventory-grid inv-grid"></div>
 </div>
-</div>
-
-<div id="target-cursor">
-    <div class="cursor-dot"></div>
-    <div class="cursor-box"></div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>

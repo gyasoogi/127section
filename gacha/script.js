@@ -16,27 +16,27 @@ let introTimeout = null;
 let debugPickupMode = false;
 
 const iconMap = {
-    "HARMONY UNIT":"img/DRONE-thumb.png", "MIRROR SIGNAL":"fa-wave-square", "SYNTHESIS GIRL":"fa-microchip",
-    "VOID ANALYZER":"fa-sliders", "NOISE DRIVER":"fa-headphones", "VECTOR DOLL":"fa-hexagon-nodes",
-    "ARCHIVE COAT":"fa-shirt", "RESEARCH FRAME":"fa-vial", "SIGNAL MASK":"fa-mask-face",
+    "DRONE UNIT":"img/DRONE-thumb.png", "TIGER UNIT":"fa-wave-square", "RABIT UNIT":"fa-microchip",
+    "GOD UNIT":"fa-hexagon-nodes", "BOW UNIT":"fa-sliders", "BEAR UNIT":"fa-headphones", 
+    "HAMSTER UNIT":"fa-shirt", "RESEARCH FRAME":"fa-vial", "SIGNAL MASK":"fa-mask-face",
     "BROKEN SHIRT":"fa-shirt", "OLD FRAME":"fa-box-archive", "COMMON SUIT":"fa-user"
 };
 
 const itemPool = {
-    SSR: ["HARMONY UNIT", "MIRROR SIGNAL", "SYNTHESIS GIRL", "VOID ANALYZER", "NOISE DRIVER", "VECTOR DOLL", "HAMSTER ANALYZER"],
+    SSR: ["DRONE UNIT", "TIGER UNIT", "RABIT UNIT", "GOD UNIT", "BOW UNIT", "BEAR UNIT", "HAMSTER UNIT"],
     SR: ["ARCHIVE COAT", "RESEARCH FRAME", "SIGNAL MASK"],
     R: ["BROKEN SHIRT", "OLD FRAME", "COMMON SUIT"]
 };
 
 // 통합된 배너 데이터 (이미지 포함)
 const banners = [
-    {name: "HARMONY", pickup: "HARMONY UNIT", image:'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1400&auto=format&fit=crop'},
-    {name: "MIRROR", pickup: "MIRROR SIGNAL", image:'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1400&auto=format&fit=crop' },
-    {name: "SYNTHESIS", pickup: "SYNTHESIS GIRL", image:'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1400&auto=format&fit=crop'},
-    {name: "NOISE", pickup: "NOISE DRIVER", image:'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1400&auto=format&fit=crop'},
-    {name: "VECTOR", pickup: "VECTOR DOLL", image:'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=1400&auto=format&fit=crop'},
-    {name: "ANALYZER", pickup: "VOID ANALYZER", image:'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=1400&auto=format&fit=crop'},
-    {name: "HAMSTER", pickup: "HAMSTER ANALYZER", image:'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=1400&auto=format&fit=crop'}
+    {name: "HARMONY", pickup: "DRONE UNIT", image:'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1400&auto=format&fit=crop'},
+    {name: "MIRROR", pickup: "TIGER UNIT", image:'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1400&auto=format&fit=crop' },
+    {name: "SYNTHESIS", pickup: "RABIT UNIT", image:'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1400&auto=format&fit=crop'},
+    {name: "NOISE", pickup: "GOD UNIT", image:'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1400&auto=format&fit=crop'},
+    {name: "VECTOR", pickup: "BOW UNIT", image:'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=1400&auto=format&fit=crop'},
+    {name: "ANALYZER", pickup: "BEAR UNIT", image:'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=1400&auto=format&fit=crop'},
+    {name: "HAMSTER", pickup: "HAMSTER UNIT", image:'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=1400&auto=format&fit=crop'}
 ]; 
 
 const ssrImageMap = {
