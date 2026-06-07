@@ -1,269 +1,205 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <title>127 SECTION // TACTICAL GACHA</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;800&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="style.css" />
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script defer src="script.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>127 SECTION // TACTICAL GACHA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800&family=Rajdhani:wght@400;500;600;700&family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<div id="boot-overlay"></div>
+    <div id="target-cursor">
+        <div class="cursor-dot"></div>
+        <div class="cursor-box"></div>
+    </div>
 
 <div id="ui-scale-wrapper">
+    <div class="background-map"></div>
+    <div class="map-noise"></div>
+    <div class="vignette"></div>
+    <a href="/index.html" style="
+        position: fixed;
+        left: 60px;
+        bottom: 60px;
+        z-index: 9999;
+        font-size: 1.1rem;
+        letter-spacing: 4px;
+        font-weight: 400;
+        color: rgb(255, 255, 255);
+        text-decoration: none;
+        font-family: 'Orbitron', 'Pretendard', sans-serif;
+        display: inline-block;
+        transition: transform 0.2s ease, color 0.2s ease;
+    " onmouseover="this.style.transform='scale(1.1)'; this.style.color='#f39c12';" 
+    onmouseout="this.style.transform='scale(1)'; this.style.color='#ffffff';">
+        BACK TO MAIN
+    </a>
 
-  <div class="background-map"></div>
-  <div class="map-noise"></div>
-  <div class="vignette"></div>
-
-  <div class="hud">
-    <div class="grid"></div>
-    <div class="scan-lines"></div>
-    <div class="noise-overlay"></div>
-
-    <div class="crosshair horizontal"></div>
-    <div class="crosshair vertical"></div>
-
-    <div class="radar radar-1"></div>
-    <div class="radar radar-2"></div>
-    <div class="radar radar-3"></div>
-
-    <div class="hud-corner tl"></div>
-    <div class="hud-corner tr"></div>
-    <div class="hud-corner bl"></div>
-    <div class="hud-corner br"></div>
-  </div>
-
-  <header class="top-bar">
-
-    <div class="system-left">
-      <div class="system-id">
-        <span class="id-big">127</span>
-
-        <div class="id-text">
-          <span>TACTICAL GACHA</span>
-          <span>SIMULATION CONTROL SYSTEM</span>
-        </div>
-      </div>
-
-      <div class="top-tags">
-        <div class="tag">
-          <span class="tag-label">STATUS</span>
-          <span class="tag-value active">ONLINE</span>
-        </div>
-
-        <div class="tag">
-          <span class="tag-label">SECTOR</span>
-          <span class="tag-value">09-A</span>
-        </div>
-      </div>
+    <div class="hud">
+        <div class="grid"></div>
+        <div class="scan-lines"></div>
+        <div class="noise-overlay"></div>
+        <div class="crosshair horizontal"></div>
+        <div class="crosshair vertical"></div>
+        <div class="radar radar-1"></div>
+        <div class="radar radar-2"></div>
+        <div class="radar radar-3"></div>
+        <div class="hud-corner tl"></div>
+        <div class="hud-corner tr"></div>
+        <div class="hud-corner bl"></div>
+        <div class="hud-corner br"></div>
     </div>
 
-    <div class="system-right">
-      <div class="mini-stat">
-        <span class="mini-label">TOTAL PULL</span>
-        <span class="mini-value" id="total-count">0</span>
-      </div>
+    <header class="top-bar">
+        <div class="system-left">
+            <div class="system-id">
+                <span class="id-big">127</span>
+                <div class="id-text">
+                    <span>SECTION</span>
+                    <span>TACTICAL GACHA</span>
+                </div>
+            </div>
+        </div>
+        <div class="system-right">
+            <div class="mini-stat">
+                <span class="mini-label">TOTAL PULLS</span>
+                <span class="mini-value yellow" id="total-count">0</span>
+            </div>
+        </div>
+    </header>
 
-      <div class="mini-stat">
-        <span class="mini-label">CREDITS</span>
-        <span class="mini-value yellow" id="credit-count">27614</span>
-      </div>
+    <main class="main-layout main">
+        <aside class="left-panel sidebar" id="sidebar"></aside>
 
-      <div class="mini-stat">
-        <span class="mini-label">SSR RATE</span>
-        <span class="mini-value yellow">1.00%</span>
-      </div>
+        <section class="center-stage content">
+            <div class="target-system">
+                <div class="ring-a target-ring"></div>
+                <div class="ring-b target-ring"></div>
+                <div class="ring-c target-ring"></div>
+                <div class="target-center"></div>
+            </div>
 
-      <div class="mini-stat">
-        <span class="mini-label">MODE</span>
-        <span class="mini-value red">TACTICAL</span>
-      </div>
+            <div class="banner-panel">
+                <div class="system-no panel-no">01</div>
+                <div class="panel-top">
+                    <div>
+                        <div class="panel-subtitle">TACTICAL DROP PROTOCOL</div>
+                        <h1 id="banner-title">HARMONY</h1>
+                    </div>
+                    <div class="panel-chip">LIMITED ACCESS</div>
+                </div>
+                
+                <div class="banner-preview">
+                    <img id="banner-image" src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1400&auto=format&fit=crop" alt="Banner Preview">
+                    <div class="banner-overlay"></div>
+                    <div class="preview-line"></div>
+                </div>
+
+                <div class="banner-info">
+                    <div class="pickup-title pickup" id="pickup-text">PICK UP : ???</div>
+                    <p class="banner-desc desc" id="banner-desc">도시 잔해 속에서 복구된 SYNTHETIC 프로토콜. 감정 동기화형 코스튬 및 특수 전술 아바타를 획득할 수 있다.</p>
+                </div>
+
+                <div class="pity-box pity-grid">
+                    <div class="pity-card pity" id="pity-ssr">SSR 확정까지 : <b>80</b>회</div>
+                    <div class="pity-card pity" id="pity-sr">SR 확정까지 : <b>10</b>회</div>
+                    <div class="pity-card pity" id="pity-pickup">픽업 확정까지 : <b>150</b>회</div>
+                </div>
+            </div>
+        </section>
+
+        <aside class="right-panel bottom-ui">
+            <div class="panel-title" style="margin-bottom: 20px;">COMMAND</div>
+            <div class="command-grid">
+                <button id="debug-pickup-btn" class="command-card ui-btn debug-btn cursor-target" onclick="toggleDebugPickup(); event.stopPropagation();">
+                    <span class="command-main">DEBUG</span>
+                    <span class="command-sub">PICKUP : OFF</span>
+                </button>
+                <button class="command-card ui-btn cursor-target" onclick="toggleRate(true); event.stopPropagation();">
+                    <span class="command-main">RATE</span>
+                    <span class="command-sub">PROBABILITY INFO</span>
+                </button>
+                <button class="command-card ui-btn cursor-target" onclick="runGacha(1); event.stopPropagation();">
+                    <span class="command-main">WARP ×1</span>
+                    <span class="command-sub">SINGLE LINK</span>
+                </button>
+                <button class="command-card ui-btn cursor-target" onclick="runGacha(10); event.stopPropagation();">
+                    <span class="command-main">WARP ×10</span>
+                    <span class="command-sub">MULTI LINK</span>
+                </button>
+                <button class="command-card large active-card ui-btn cursor-target" onclick="toggleInventory(true); event.stopPropagation();">
+                    <span class="command-main">INVENTORY</span>
+                    <span class="command-sub">DATABASE ACCESS</span>
+                </button>
+            </div>
+        </aside>
+    </main>
+
+
+<div id="loading-screen">
+    <div class="loader"></div>
+    <div class="loading-text">TACTICAL SYSTEM INITIALIZING</div>
+</div>
+
+<div id="gacha-overlay">
+    <div class="scan-line"></div>
+    <div class="scan-ring"></div>
+    <div class="flash-wrap">
+        <div class="flash-noise"></div>
+        <div class="flash-text">
+            <span>1</span><span>2</span><span>7</span><span>SECTION</span>
+        </div>
     </div>
-
-  </header>
-
-  <main class="main-layout">
-
-    <aside class="left-panel">
-
-      <div class="panel-header">
-        BANNER SELECT
-      </div>
-
-      <div class="banner-list" id="banner-list"></div>
-
-      <div class="side-info">
-        <span>LOCATION : SECTOR 09</span>
-        <span>OBJECTIVE : SIGNAL EXTRACTION</span>
-        <span>MISSION : ACTIVE</span>
-      </div>
-
-    </aside>
-
-    <section class="center-stage">
-
-      <div class="target-system">
-        <div class="target-ring ring-a"></div>
-        <div class="target-ring ring-b"></div>
-        <div class="target-ring ring-c"></div>
-
-        <div class="target-center"></div>
-      </div>
-
-      <div class="banner-panel">
-
-        <div class="panel-no" id="panel-no">01</div>
-
-        <div class="panel-top">
-          <div>
-            <div class="panel-subtitle">TACTICAL PICKUP</div>
-            <h1 id="banner-title">DRONE</h1>
-          </div>
-
-          <div class="panel-chip">LIVE</div>
-        </div>
-
-        <div class="banner-preview">
-          <img id="banner-image" src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1400&auto=format&fit=crop" alt="banner">
-
-          <div class="banner-overlay"></div>
-
-          <div class="preview-line"></div>
-          <div class="preview-box"></div>
-        </div>
-
-        <div class="banner-info">
-          <div class="pickup-title" id="pickup-title">
-            DRONE COSTUME
-          </div>
-
-          <div class="banner-desc" id="banner-desc">
-            폐허 도시 내부에서 발견된 전술 프로토콜. 교란형 코스튬 및 제어 장비를 획득할 수 있습니다.
-          </div>
-        </div>
-
-        <div class="pity-grid">
-          <div class="pity-card">
-            <span>SSR GUARANTEE</span>
-            <b id="pity-ssr">80</b>
-          </div>
-
-          <div class="pity-card">
-            <span>SR GUARANTEE</span>
-            <b id="pity-sr">10</b>
-          </div>
-
-          <div class="pity-card">
-            <span>PICKUP GUARANTEE</span>
-            <b id="pity-pickup">150</b>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="floating-box data-a">
-        <span class="num">01</span>
-        <span class="txt">TRACKING ACTIVE</span>
-      </div>
-
-      <div class="floating-box data-b">
-        <span class="num">08</span>
-        <span class="txt">SIGNAL LOCKED</span>
-      </div>
-
-    </section>
-
-    <aside class="right-panel">
-
-      <div class="panel-title">
-        COMMAND
-      </div>
-
-      <div class="panel-sub">
-        SYSTEM ACCESS
-      </div>
-
-      <div class="command-grid">
-
-        <button class="command-card cursor-target" onclick="runGacha(1)">
-          <span class="command-main">1 PULL</span>
-          <span class="command-sub">160 CREDIT CONSUME</span>
-        </button>
-
-        <button class="command-card cursor-target" onclick="runGacha(10)">
-          <span class="command-main">10 PULL</span>
-          <span class="command-sub">1600 CREDIT CONSUME</span>
-        </button>
-
-        <button class="command-card large active-card cursor-target" onclick="toggleInventory(true)">
-          <span class="command-main">INVENTORY</span>
-          <span class="command-sub">DATABASE ACCESS</span>
-        </button>
-
-      </div>
-
-      <div class="server-status">
-        <div class="status-dot"></div>
-        <span>SERVER STATUS ONLINE</span>
-      </div>
-
-    </aside>
-
-  </main>
-
-  <footer class="bottom-bar">
-    <div>SAT / POS / LAT</div>
-    <div>CONNECTION : STABLE</div>
-    <div>BUILD 04.23.198</div>
-  </footer>
-
 </div>
 
-<div id="result-screen">
-  <div class="result-header">
-    <span>GACHA RESULT</span>
-    <button onclick="closeResult()">CLOSE</button>
-  </div>
-
-  <div class="result-grid" id="result-grid"></div>
+<div id="ssr-masonry-overlay">
+    <div id="masonry-list" class="masonry-list"></div>
 </div>
 
-<div id="inventory-overlay">
-  <div id="inventory-panel">
+<div id="single-reveal" style="display: none;">
+    <div id="reveal-content"></div>
+</div>
 
-    <div class="inventory-header">
-      <h2>INVENTORY</h2>
+<div id="result-screen" class="result-container" onclick="closeResult(); event.stopPropagation();">
+    <div class="result-grid" id="result-grid"></div>
+</div>
 
-      <div class="inventory-actions">
-        <select id="sort-select" onchange="renderInventory()">
-          <option value="rarity">희귀도순</option>
-          <option value="count">획득량순</option>
-        </select>
+<div id="ssr-preview" onclick="toggleSSRPreview(false)">
+    <div id="ssr-preview-image"></div>
+</div>
 
-        <button onclick="toggleInventory(false)">CLOSE</button>
-      </div>
+<div id="rate-popup" onclick="toggleRate(false)">
+    <div class="rate-box" onclick="event.stopPropagation()">
+        <h2 class="rate-title">[ 소환 확률 안내 ]</h2>
+        <div class="rate-section">
+            <div class="rate-heading">1. 등급별 획득 확률</div>
+            <div class="rate-line ssr-rate">SSR: 1%</div>
+            <div class="rate-line sr-rate">SR: 13%</div>
+            <div class="rate-line r-rate">R: 86%</div>
+        </div>
     </div>
-
-    <div class="inventory-grid" id="inventory-grid"></div>
-
-  </div>
 </div>
 
-<div id="target-cursor">
-  <div class="cursor-dot"></div>
-  <div class="cursor-box"></div>
+<div id="inv-overlay"></div>
+<div id="inv-panel">
+    <div class="inventory-header inv-header">
+        <h2 class="inventory-title inv-title">SECURE ARCHIVE INVENTORY</h2>
+        <div class="inventory-actions">
+            <select id="inv-filter" onchange="renderInventory()" class="cursor-target">
+                <option value="all">전체 보기</option>
+                <option value="SSR">SSR 등급만</option>
+                <option value="SR">SR 등급만</option>
+                <option value="R">R 등급만</option>
+            </select>
+            <button class="cursor-target close-btn" onclick="toggleInventory(false)">CLOSE ARCHIVE</button>
+        </div>
+    </div>
+    <div id="inv-grid" class="inventory-grid inv-grid"></div>
+</div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

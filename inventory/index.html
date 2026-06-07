@@ -133,6 +133,23 @@
   <div class="scan-lines"></div>
 
   <div id="ui-scale-wrapper">
+    <a href="/index.html" style="
+        position: fixed;
+        left: 60px;
+        bottom: 60px;
+        z-index: 9999;
+        font-size: 1.1rem;
+        letter-spacing: 4px;
+        font-weight: 400;
+        color: rgb(0, 0, 0);
+        text-decoration: none;
+        font-family: 'Orbitron', 'Pretendard', sans-serif;
+        display: inline-block;
+        transition: transform 0.2s ease, color 0.2s ease;
+    " onmouseover="this.style.transform='scale(1.1)'; this.style.color='#f39c12';" 
+    onmouseout="this.style.transform='scale(1)'; this.style.color='#ffffff';">
+        BACK TO MAIN
+    </a>
     
     <div class="relative w-[1300px] h-[800px] flex box-border border border-[var(--line-strong)] bg-[rgba(255,255,255,0.4)] backdrop-blur-sm">
       
@@ -334,138 +351,129 @@
 
     /* 2. CHARACTER DATA */
     const CHARACTERS = [
-      {
-        code: "010", codeStr: "EVA_010", name: "에바", englishName: "EVA",
-        height: "162cm", weight: "47kg", affiliation: "UNKNOWN FUTURE", position: "전술 지원 / 정찰관",
-        icon: "target",
-        notes: "UF 최전선 부서 출신의 엘리트 요원, 데이터 분석 및 전술 추론에 능숙하다. 그의 진짜 신분과 과거는 아직 조사 중이다.",
-        stats: [
-          { label: '전투력', sub: 'COMBAT', value: 75, grade: 'A' },
-          { label: '기동력', sub: 'MOBILITY', value: 45, grade: 'D' },
-          { label: '체력', sub: 'VITALITY', value: 95, grade: 'S' },
-          { label: '정신력', sub: 'MENTAL', value: 60, grade: 'B' },
-          { label: '잠재력', sub: 'POTENTIAL', value: 50, grade: 'C' },
-          { label: '판단력', sub: 'CONTROL', value: 80, grade: 'A' }
-        ],
-        skills: [
-          { icon: 'radio', name: '양자 관측', desc: '짧은 시간 동안 아군 전체의 명중률과 치명타 확률을 높인다.', level: 3 },
-          { icon: 'eye', name: '미래 예견', desc: '적의 행동을 예측하고 약점을 표시한다.', level: 2 },
-          { icon: 'activity', name: '신호 교란', desc: '적에게 교란을 일으켜 명중률과 적 탐지 능력을 떨어뜨린다.', level: 2 },
-          { icon: 'hexagon', name: '종국 추론', desc: '전장 데이터를 분석하여 최적의 전술 방안을 생성한다.', level: 3 }
-        ]
-      },
-      {
-        code: "011", codeStr: "REYN_011", name: "레인", englishName: "REYN",
-        height: "188cm", weight: "85kg", affiliation: "VANGUARD DIVISION", position: "전선 중장 / 선봉 방패병",
-        icon: "shield",
-        notes: "바위처럼 단단한 전선 방위의 핵심 요원. 극도로 높은 강도의 타격을 견뎌낼 수 있는 입자 실드 스킬을 보유하고 있다. 의리가 두텁고 언제나 동료의 앞을 지킨다.",
-        stats: [
-          { label: '전투력', sub: 'COMBAT', value: 65, grade: 'B' },
-          { label: '기동력', sub: 'MOBILITY', value: 35, grade: 'E' },
-          { label: '체력', sub: 'VITALITY', value: 98, grade: 'SS' },
-          { label: '정신력', sub: 'MENTAL', value: 85, grade: 'A' },
-          { label: '잠재력', sub: 'POTENTIAL', value: 55, grade: 'C' },
-          { label: '판단력', sub: 'CONTROL', value: 70, grade: 'B' }
-        ],
-        skills: [
-          { icon: 'shield', name: '자성 장벽', desc: '원거리 탄도를 저지할 수 있는 강력한 자성 방패를 전개한다.', level: 3 },
-          { icon: 'zap', name: '중력 강습', desc: '지면을 내리쳐 넓은 범위 내의 적 대상을 감속 상태에 빠뜨린다.', level: 2 },
-          { icon: 'activity', name: '과부하 융단', desc: '실드의 일부를 희생하여 짧은 시간 동안 높은 저항력으로 전환한다.', level: 1 },
-          { icon: 'hexagon', name: '절대 방어', desc: '생성 반지름 5미터의 난공불락 방어 영역 구축.', level: 2 }
-        ]
-      },
-      {
-        code: "012", codeStr: "SHADOW_012", name: "섀도우", englishName: "SHADOW",
-        height: "175cm", weight: "60kg", affiliation: "BLACK OPS", position: "적후 침투 / 은밀 암살자",
-        icon: "zap",
-        notes: "소속과 출신이 모두 불명에 부쳐진 은밀 기동 요원. 그림자 속을 자유롭게 이동하며 치명적인 일격을 가하는 것에 능숙하다. 기밀 데이터 말소율이 극도로 높음.",
-        stats: [
-          { label: '전투력', sub: 'COMBAT', value: 95, grade: 'S' },
-          { label: '기동력', sub: 'MOBILITY', value: 95, grade: 'S' },
-          { label: '체력', sub: 'VITALITY', value: 40, grade: 'D' },
-          { label: '정신력', sub: 'MENTAL', value: 75, grade: 'A' },
-          { label: '잠재력', sub: 'POTENTIAL', value: 80, grade: 'A' },
-          { label: '판단력', sub: 'CONTROL', value: 65, grade: 'B' }
-        ],
-        skills: [
-          { icon: 'eye', name: '광학 미채', desc: '완전 은신 상태에 진입하며, 이 기간 동안 이동 속도가 크게 상승한다.', level: 3 },
-          { icon: 'target', name: '백스탭 피니시', desc: '은신 상태이거나 적의 시야 사각지대에 있을 때 3배의 파괴력을 입힌다.', level: 3 },
-          { icon: 'radio', name: '위상 점멸', desc: '앞으로 일정 거리 순간이동하고 홀로그램 잔상을 남긴다.', level: 2 }
-        ]
-      },
-      {
-        code: "013", codeStr: "LUNA_013", name: "루나", englishName: "LUNA",
-        height: "158cm", weight: "43kg", affiliation: "ASTRON RESEARCH", position: "의무 지원 / 양자 의학자",
-        icon: "moon",
-        notes: "우주 입자와 생체 에너지를 결합한 첨단 치료 기술의 선구자. 전투 능력은 낮으나 전장의 판도를 바꾸는 회복 및 정화 프로토콜을 가동한다.",
-        stats: [
-          { label: '전투력', sub: 'COMBAT', value: 30, grade: 'F' },
-          { label: '기동력', sub: 'MOBILITY', value: 60, grade: 'B' },
-          { label: '체력', sub: 'VITALITY', value: 55, grade: 'C' },
-          { label: '정신력', sub: 'MENTAL', value: 90, grade: 'S' },
-          { label: '잠재력', sub: 'POTENTIAL', value: 85, grade: 'A' },
-          { label: '판단력', sub: 'CONTROL', value: 90, grade: 'S' }
-        ],
-        skills: [
-          { icon: 'activity', name: '양자 정화', desc: '아군에게 걸린 디버프를 즉시 제거하고 지속 치유막을 부여한다.', level: 3 },
-          { icon: 'radio', name: '위성 펄스', desc: '주변 아군의 에너지를 충전하여 스킬 쿨타임을 감소시킨다.', level: 2 }
-        ]
-      },
-      {
-        code: "014", codeStr: "KAI_014", name: "카이", englishName: "KAI",
-        height: "182cm", weight: "74kg", affiliation: "CYBER NETWORKS", position: "원거리 타격 / 저격수",
-        icon: "crosshair",
-        notes: "냉철한 성격의 탑클래스 스나이퍼. 사이보그안(眼)을 통해 수 킬로미터 밖의 표적도 오차 없이 포착한다. 불필요한 대화나 감정 낭비를 극도로 싫어한다.",
-        stats: [
-          { label: '전투력', sub: 'COMBAT', value: 92, grade: 'S' },
-          { label: '기동력', sub: 'MOBILITY', value: 55, grade: 'C' },
-          { label: '체력', sub: 'VITALITY', value: 50, grade: 'C' },
-          { label: '정신력', sub: 'MENTAL', value: 80, grade: 'A' },
-          { label: '잠재력', sub: 'POTENTIAL', value: 65, grade: 'B' },
-          { label: '판단력', sub: 'CONTROL', value: 85, grade: 'A' }
-        ],
-        skills: [
-          { icon: 'target', name: '정밀 궤적', desc: '치명타 확률이 100%로 고정되는 저격 모드에 돌입한다.', level: 3 },
-          { icon: 'eye', name: '열화상 스캔', desc: '벽 뒤에 숨은 적의 위치를 탐지해 아군 공유 네트워크에 전송한다.', level: 2 },
-          { icon: 'hexagon', name: '철갑 관통탄', desc: '적의 방어 장벽을 무시하고 직접적인 타격을 입힌다.', level: 2 }
-        ]
-      },
-      {
-        code: "015", codeStr: "ORION_015", name: "오리온", englishName: "ORION",
-        height: "179cm", weight: "71kg", affiliation: "NEXUS CORE", position: "기술 분석 / 시스템 해커",
-        icon: "cpu",
-        notes: "네트워크 및 기계 제어의 천재. 전장에 배치된 드론 and 전술 기기들을 실시간으로 오버라이딩하여 아군 편의 시스템으로 역이용하는 능력이 탁월하다.",
-        stats: [
-          { label: '전투력', sub: 'COMBAT', value: 50, grade: 'C' },
-          { label: '기동력', sub: 'MOBILITY', value: 70, grade: 'B' },
-          { label: '체력', sub: 'VITALITY', value: 60, grade: 'B' },
-          { label: '정신력', sub: 'MENTAL', value: 85, grade: 'A' },
-          { label: '잠재력', sub: 'POTENTIAL', value: 92, grade: 'S' },
-          { label: '판단력', sub: 'CONTROL', value: 75, grade: 'A' }
-        ],
-        skills: [
-          { icon: 'zap', name: '메인프레임 재부팅', desc: '주변 적 메카닉 유닛의 제어권을 5초간 탈취한다.', level: 3 },
-          { icon: 'radio', name: '보호 도메인', desc: '아군 전자 장비를 보호하는 재밍 방화벽 영역을 생성한다.', level: 2 }
-        ]
-      },
-      {
-        code: "016", codeStr: "BLAZE_016", name: "블레이즈", englishName: "BLAZE",
-        height: "185cm", weight: "80kg", affiliation: "ECLIPSE SQUAD", position: "화력 압도 / 중화기병",
-        icon: "flame",
-        notes: "고열 플라즈마 화기를 자유자재로 다루는 돌격대장. 전면전을 선호하며 방어선을 단숨에 소각시키는 무자비한 화력을 자랑한다. 충동적인 성향으로 경고를 자주 받음.",
-        stats: [
-          { label: '전투력', sub: 'COMBAT', value: 88, grade: 'A' },
-          { label: '기동력', sub: 'MOBILITY', value: 75, grade: 'A' },
-          { label: '체력', sub: 'VITALITY', value: 80, grade: 'A' },
-          { label: '정신력', sub: 'MENTAL', value: 50, grade: 'C' },
-          { label: '잠재력', sub: 'POTENTIAL', value: 70, grade: 'B' },
-          { label: '판단력', sub: 'CONTROL', value: 55, grade: 'C' }
-        ],
-        skills: [
-          { icon: 'zap', name: '플라즈마 소각', desc: '전방에 부채꼴 모양으로 지속적인 화염 피해와 지속 연소 디버프를 준다.', level: 3 },
-          { icon: 'activity', name: '과열 폭주', desc: '이동 속도와 공격 속도가 대폭 폭증하지만 지속해서 체력을 소모한다.', level: 2 }
-        ]
-      }
+  {
+    code: "001", codeStr: "MD_001", name: "문대", englishName: "MOONDAE",
+    height: "177cm", weight: "60kg", affiliation: "TeSTAR", position: "전술 보조 / 기동 버퍼",
+    icon: "activity",
+    notes: "전장의 흐름을 읽고 통제하는 사령탑. 전투력은 낮으나, 압도적인 기동 속도(2.0)로 전장을 누비며 아군 전체의 행동 반경을 넓힌다.",
+    stats: [
+      { label: '전투력', sub: 'COMBAT', value: 15, grade: 'E' },
+      { label: '기동력', sub: 'MOBILITY', value: 95, grade: 'S' },
+      { label: '체력', sub: 'VITALITY', value: 45, grade: 'C' },
+      { label: '정신력', sub: 'MENTAL', value: 90, grade: 'S' },
+      { label: '잠재력', sub: 'POTENTIAL', value: 85, grade: 'A' },
+      { label: '판단력', sub: 'CONTROL', value: 95, grade: 'S' }
+    ],
+    skills: [
+      { icon: 'radio', name: '전술 지휘', desc: '아군 전체의 기동 속도를 대폭 보조하여 전술 우위를 점한다.', level: 3 },
+      { icon: 'cpu', name: '드론 사격 개시', desc: '소형 전술 드론을 출격시켜 타깃이 된 적을 추적하고 지속적인 보조 사격을 가한다.', level: 2 }
+    ]
+  },
+  {
+    code: "002", codeStr: "AH_002", name: "아현", englishName: "AHYEON",
+    height: "174cm", weight: "58kg", affiliation: "TeSTAR", position: "의무 지원 / 서포터",
+    icon: "heart",
+    notes: "위급 상황에서 진가를 발휘하는 전장의 구호자. 적의 접근을 차단함과 동시에 피해를 입은 아군을 신속하게 회복시킨다.",
+    stats: [
+      { label: '전투력', sub: 'COMBAT', value: 10, grade: 'F' },
+      { label: '기동력', sub: 'MOBILITY', value: 85, grade: 'A' },
+      { label: '체력', sub: 'VITALITY', value: 55, grade: 'C' },
+      { label: '정신력', sub: 'MENTAL', value: 80, grade: 'A' },
+      { label: '잠재력', sub: 'POTENTIAL', value: 75, grade: 'B' },
+      { label: '판단력', sub: 'CONTROL', value: 70, grade: 'B' }
+    ],
+    skills: [
+      { icon: 'shield', name: '반발장 형성', desc: '접근하는 적을 뒤로 밀어내어 안전 거리를 확보한다.', level: 2 },
+      { icon: 'activity', name: '긴급 구호', desc: '체력이 낮은 위급한 아군을 즉시 회복시킨다.', level: 3 }
+    ]
+  },
+  {
+    code: "003", codeStr: "BS_003", name: "큰세진", englishName: "BIGSEJIN",
+    height: "181cm", weight: "68kg", affiliation: "TeSTAR", position: "전선 방위 / 메인 탱커",
+    icon: "shield",
+    notes: "가장 높은 체력(1100)을 보유한 최전선 방어의 핵심. 적의 시선을 끌어모으며 강력한 넉백으로 진형을 무너뜨린다.",
+    stats: [
+      { label: '전투력', sub: 'COMBAT', value: 12, grade: 'E' },
+      { label: '기동력', sub: 'MOBILITY', value: 40, grade: 'D' },
+      { label: '체력', sub: 'VITALITY', value: 99, grade: 'SS' },
+      { label: '정신력', sub: 'MENTAL', value: 75, grade: 'B' },
+      { label: '잠재력', sub: 'POTENTIAL', value: 70, grade: 'B' },
+      { label: '판단력', sub: 'CONTROL', value: 85, grade: 'A' }
+    ],
+    skills: [
+      { icon: 'zap', name: '강력 넉백', desc: '전방의 적들에게 묵직한 일격을 가해 크게 밀쳐낸다.', level: 3 },
+      { icon: 'target', name: '시선 집중', desc: '어그로를 극대화하여 적의 모든 공격을 자신에게 돌린다.', level: 3 }
+    ]
+  },
+  {
+    code: "004", codeStr: "MS_004", name: "작은세진", englishName: "MINISEJIN",
+    height: "174cm", weight: "59kg", affiliation: "TeSTAR", position: "화력 지원 / 공격 버퍼",
+    icon: "arrow-up",
+    notes: "아군의 화력을 극대화하는 전장의 기폭제. 비교적 저렴한 코스트($180) 대비 뛰어난 효율로 팀 전체의 파괴력을 상승시킨다.",
+    stats: [
+      { label: '전투력', sub: 'COMBAT', value: 25, grade: 'D' },
+      { label: '기동력', sub: 'MOBILITY', value: 70, grade: 'B' },
+      { label: '체력', sub: 'VITALITY', value: 40, grade: 'D' },
+      { label: '정신력', sub: 'MENTAL', value: 80, grade: 'A' },
+      { label: '잠재력', sub: 'POTENTIAL', value: 90, grade: 'S' },
+      { label: '판단력', sub: 'CONTROL', value: 75, grade: 'B' }
+    ],
+    skills: [
+      { icon: 'flame', name: '화력 증폭', desc: '모든 아군 개체의 공격력을 35% 증가시킨다.', level: 3 }
+    ]
+  },
+  {
+    code: "005", codeStr: "CW_005", name: "청우", englishName: "CHONGWOO",
+    height: "186cm", weight: "73kg", affiliation: "TeSTAR", position: "원거리 타격 / 관통 저격수",
+    icon: "crosshair",
+    notes: "압도적인 공격력(150)과 사거리(1000)를 지닌 스나이퍼. 기동성은 낮으나 최후방에서 적의 방어선을 꿰뚫는 치명적인 관통상을 입힌다.",
+    stats: [
+      { label: '전투력', sub: 'COMBAT', value: 98, grade: 'SS' },
+      { label: '기동력', sub: 'MOBILITY', value: 20, grade: 'E' },
+      { label: '체력', sub: 'VITALITY', value: 30, grade: 'E' },
+      { label: '정신력', sub: 'MENTAL', value: 95, grade: 'S' },
+      { label: '잠재력', sub: 'POTENTIAL', value: 75, grade: 'B' },
+      { label: '판단력', sub: 'CONTROL', value: 85, grade: 'A' }
+    ],
+    skills: [
+      { icon: 'shield', name: '기지 방어', desc: '거점에 고정하여 방어 모드에 돌입한다.', level: 2 },
+      { icon: 'target', name: '장거리 관통 저격', desc: '초장거리에서 적을 꿰뚫는 고화력 저격을 수행한다.', level: 3 }
+    ]
+  },
+  {
+    code: "006", codeStr: "RB_006", name: "래빈", englishName: "RABIN",
+    height: "183cm", weight: "65kg", affiliation: "TeSTAR", position: "근접 타격 / 브루저",
+    icon: "hexagon",
+    notes: "적진을 돌파하는 근접 전투의 스페셜리스트. 준수한 체력(450)과 강력한 공격력(70)을 바탕으로 초근접전에서 파괴적인 타격을 가한다.",
+    stats: [
+      { label: '전투력', sub: 'COMBAT', value: 80, grade: 'A' },
+      { label: '기동력', sub: 'MOBILITY', value: 65, grade: 'B' },
+      { label: '체력', sub: 'VITALITY', value: 70, grade: 'B' },
+      { label: '정신력', sub: 'MENTAL', value: 60, grade: 'C' },
+      { label: '잠재력', sub: 'POTENTIAL', value: 85, grade: 'A' },
+      { label: '판단력', sub: 'CONTROL', value: 65, grade: 'C' }
+    ],
+    skills: [
+      { icon: 'zap', name: '초근접 한방 타격', desc: '가까이 접근한 적군에게 강력하고 치명적인 단일 타격을 입힌다.', level: 3 }
+    ]
+  },
+  {
+    code: "007", codeStr: "EJ_007", name: "유진", englishName: "EUGYIN",
+    height: "180cm", weight: "62kg", affiliation: "TeSTAR", position: "광역 제압 / 디버퍼",
+    icon: "wind",
+    notes: "적의 진형을 천천히 갉아먹는 유격수. 공격 시 광범위한 적에게 지속 피해를 입혀 다대일 전투에서 탁월한 성능을 보인다.",
+    stats: [
+      { label: '전투력', sub: 'COMBAT', value: 45, grade: 'C' },
+      { label: '기동력', sub: 'MOBILITY', value: 70, grade: 'B' },
+      { label: '체력', sub: 'VITALITY', value: 45, grade: 'C' },
+      { label: '정신력', sub: 'MENTAL', value: 70, grade: 'B' },
+      { label: '잠재력', sub: 'POTENTIAL', value: 80, grade: 'A' },
+      { label: '판단력', sub: 'CONTROL', value: 75, grade: 'B' }
+    ],
+    skills: [
+      { icon: 'activity', name: '광역 도트 피해', desc: '공격 시 범위 내의 적들에게 중독/연소와 같은 지속 피해를 부여한다.', level: 3 }
+    ]
+  }
     ];
 
     let currentIdx = 0;
