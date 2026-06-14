@@ -19,6 +19,32 @@
 <body>
 
 <div id="ui-scale-wrapper">
+<div id="difficulty-overlay" class="difficulty-overlay">
+  <div class="diff-container">
+    <h1 class="diff-title">SELECT DIFFICULTY</h1>
+    <p class="diff-sub">INITIALIZING TACTICAL SYSTEM...</p>
+    
+    <div class="diff-cards">
+      <div class="diff-card cursor-target" data-diff="EASY" data-pulls="450">
+        <h2>EASY</h2>
+        <p>MAX PULLS : 450</p>
+        <div class="diff-bar easy-bar"></div>
+      </div>
+      
+      <div class="diff-card cursor-target" data-diff="NORMAL" data-pulls="350">
+        <h2>NORMAL</h2>
+        <p>MAX PULLS : 350</p>
+        <div class="diff-bar normal-bar"></div>
+      </div>
+      
+      <div class="diff-card cursor-target" data-diff="HARD" data-pulls="200">
+        <h2>HARD</h2>
+        <p>MAX PULLS : 200</p>
+        <div class="diff-bar hard-bar"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
   <div class="background-map"></div>
   <div class="map-noise"></div>
@@ -68,7 +94,7 @@
 
       <div class="mini-stat">
         <span class="mini-label">DIFFICULT</span>
-        <span class="mini-value red">HARD</span>
+        <span class="mini-value red" id="hud-difficulty">HARD</span>
       </div>
 
       <div class="mini-stat">
@@ -517,6 +543,62 @@ function autoScaleUI() {
 
 window.addEventListener('resize', autoScaleUI);
 document.addEventListener('DOMContentLoaded', autoScaleUI);
+
+/* =========================================
+   DIFFICULTY SELECTION LOGIC
+========================================= */
+document.addEventListener('DOMContentLoaded', () => {
+  const diffOverlay = document.getElementById('difficulty-overlay');
+  const diffCards = document.querySelectorAll('.diff-card');
+  const hudDiffValue = document.getElementById('hud-difficulty');
+
+  // 로컬 스토리지에서 기존 설정값 확인
+  let savedDiff = localStorage.getItem('gameDifficulty');
+
+  if (!savedDiff) {
+    // 최초 접속 시: 난이도 선택창 보이기
+    if (diffOverlay) diffOverlay.style.display = 'flex';
+  } else {
+    // 이미 난이도를 선택한 기록이 있으면 창 숨기고 우측 상단 HUD에 값 반영
+    if (diffOverlay) diffOverlay.style.display = 'none';
+    updateDifficultyHUD(savedDiff);
+  }
+
+  // 난이도 카드 클릭 이벤트
+  diffCards.forEach(card => {
+    card.addEventListener('click', () => {
+      const diff = card.getAttribute('data-diff');
+      const maxPulls = card.getAttribute('data-pulls');
+
+      // 로컬 스토리지에 영구 저장
+      localStorage.setItem('gameDifficulty', diff);
+      localStorage.setItem('gachaMaxPulls', maxPulls);
+
+      // 모달 페이드 아웃 후 종료
+      gsap.to(diffOverlay, {
+        opacity: 0,
+        duration: 0.5,
+        ease: 'power2.out',
+        onComplete: () => {
+          diffOverlay.style.display = 'none';
+          updateDifficultyHUD(diff);
+        }
+      });
+    });
+  });
+
+  // HUD 텍스트 및 색상 업데이트 함수
+  function updateDifficultyHUD(diff) {
+    if (!hudDiffValue) return;
+    hudDiffValue.innerText = diff;
+    
+    // 난이도에 따른 텍스트 컬러 부여
+    if (diff === 'EASY') hudDiffValue.style.color = '#8cff8c';
+    else if (diff === 'NORMAL') hudDiffValue.style.color = '#4da6ff';
+    else if (diff === 'HARD') hudDiffValue.style.color = 'var(--red)';
+  }
+});
+
 </script>
 
 </body>

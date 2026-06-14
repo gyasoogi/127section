@@ -4,13 +4,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap');
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
 
-*{
-  margin:0; padding:0; box-sizing:border-box; user-select:none; -webkit-user-drag:none;
+@font-face {
+    font-family: 'Hamlet';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2110@1.0/Hahmlet-Thin.woff2') format('woff2');
+    font-weight: 100;
+    font-display: swap;
 }
 
-*, *::before, *::after {
-    cursor: none !important;
-}
+*{ margin:0; padding:0; box-sizing:border-box; user-select:none; -webkit-user-drag:none; }
+*, *::before, *::after { cursor: none !important; }
 
 :root{
   --bg:#050505;
@@ -29,53 +31,33 @@ body{
   width:100vw; height:100vh; overflow:hidden; background:#000;
   font-family:'Rajdhani', 'Pretendard', sans-serif; color:var(--text);
 }
-
 img { pointer-events:none; }
 
 /* =========================================
    BACKGROUND DECORATIONS & INTERACTIVE DOTS
 ========================================= */
-/* UI 스케일링 시스템 */
 #ui-scale-wrapper {
-    position: absolute;
-    width: 1920px;
-    height: 1080px;
-    left: 50%;
-    top: 50%;
-    transform-origin: center;
-    transform: translate(-50%, -50%);
-    overflow: hidden;
-    z-index: 10; /* 기본 스케일러 베이스 수치 */
+    position: absolute; width: 1920px; height: 1080px; left: 50%; top: 50%;
+    transform-origin: center; transform: translate(-50%, -50%); overflow: hidden; z-index: 10; 
 }
 
-/* 타겟 커서 시스템 */
 #target-cursor {
-    position: fixed;
-    left: 0; top: 0;
-    width: 0; height: 0;
-    pointer-events: none;
-    z-index: 999999;
-    mix-blend-mode: difference;
+    position: fixed; left: 0; top: 0; width: 0; height: 0;
+    pointer-events: none; z-index: 999999; mix-blend-mode: difference;
 }
 .cursor-dot {
-    position: absolute;
-    width: 5px; height: 5px;
-    background: #fff;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
+    position: absolute; width: 5px; height: 5px; background: #fff;
+    border-radius: 50%; transform: translate(-50%, -50%);
 }
-/* 커서 박스에 부드러운 스케일링 효과 추가 */
 .cursor-box {
-    position: absolute; left: 50%; top: 50%; 
-    width: 36px; height: 36px; border: 2px solid #fff; 
-    transform: translate(-50%, -50%) rotate(45deg);
-    transition: transform 0.2s ease-out; /* 이 줄을 추가하세요 */
+    position: absolute; left: 50%; top: 50%; width: 36px; height: 36px; 
+    border: 2px solid #fff; transform: translate(-50%, -50%) rotate(45deg);
+    transition: transform 0.2s ease-out; 
 }
 
 .background-map{
   position:absolute; inset:0;
-  background:radial-gradient(circle at center,rgba(255,255,255,.04),transparent 60%),
-              url('https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=2400&auto=format&fit=crop');
+  background:radial-gradient(circle at center,rgba(255,255,255,.04),transparent 60%), url('https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=2400&auto=format&fit=crop');
   background-size:cover; background-position:center;
   filter:grayscale(1) contrast(1.2) brightness(.18); transform:scale(1.08);
 }
@@ -107,7 +89,7 @@ img { pointer-events:none; }
 .id-text{ display:flex; flex-direction:column; margin-top:14px; letter-spacing:4px;}
 .id-text span:last-child{ opacity:.4; font-size:.75rem; letter-spacing:3px; }
 
-.mini-stat{ background:var(--panel); border:1px solid var(--line); backdrop-filter:blur(10px); min-width:150px; padding:14px 18px; display:flex; flex-direction:column; clip-path: var(--clip); }
+.mini-stat{ background:var(--panel); border:1px solid var(--line); backdrop-filter:blur(4px); min-width:150px; padding:14px 18px; display:flex; flex-direction:column; clip-path: var(--clip); }
 .mini-label{ font-size:.7rem; letter-spacing:2px; opacity:.45; }
 .mini-value{ margin-top:5px; font-size:1rem; font-weight:700; font-family:'Orbitron';}
 .yellow{color:var(--yellow);}
@@ -124,14 +106,14 @@ img { pointer-events:none; }
 .ring-a{width:420px;height:420px;border:1px solid rgba(255,255,255,.12);}
 .ring-b{width:280px;height:280px;border:1px dashed rgba(255,255,255,.16);}
 
-.banner-panel{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:760px; padding:36px; background:var(--panel); border:1px solid var(--line); backdrop-filter:blur(14px); clip-path:var(--clip); overflow:hidden; }
+.banner-panel{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:760px; padding:36px; background:rgba(10,10,10,0.85); border:1px solid var(--line); backdrop-filter:blur(8px); clip-path:var(--clip); overflow:hidden; }
 .panel-no{ position:absolute; right:24px; top:12px; font-size:5rem; font-family:'Orbitron',sans-serif; opacity:.06; font-weight:800; }
-#banner-title{ margin-top:10px; font-size:4rem; font-family:'Orbitron',sans-serif; }
+#banner-title{ margin-top:10px; font-size:3.5rem; font-family:'Orbitron',sans-serif; }
 .panel-chip{ border:1px solid rgba(255,255,255,.15); padding:10px 16px; font-size:.8rem; letter-spacing:3px; display:inline-block; margin-top:10px;}
 
 .banner-preview{ position:relative; height:280px; margin-top:26px; overflow:hidden; border:1px solid rgba(255,255,255,.1); clip-path: var(--clip); }
-.banner-preview img{ width:100%; height:100%; object-fit:cover; filter:grayscale(1) contrast(1.1); }
-.banner-overlay{ position:absolute; inset:0; background:linear-gradient(to top,rgba(0,0,0,.7),transparent); }
+.banner-preview img{ width:100%; height:100%; object-fit:cover; filter:grayscale(1.0) contrast(1.1); }
+.banner-overlay{ position:absolute; inset:0; background:linear-gradient(to top, rgb(0 0 0 / 44%), transparent); }
 
 .banner-info { margin-top: 15px; }
 .pickup-title{ font-family:'Orbitron',sans-serif; color:var(--yellow); letter-spacing:2px; }
@@ -146,7 +128,6 @@ img { pointer-events:none; }
 .panel-title{ font-size:3.5rem; font-family:'Orbitron',sans-serif; letter-spacing: 2px;}
 .command-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
 
-/* 버튼 클리핑 패스로 인해 글자가 잘리지 않도록 padding 좌우 여백을 충분히 확보 */
 .command-card{ background:var(--panel); border:1px solid var(--line); clip-path: var(--clip); color:#fff; min-height:120px; padding:24px 34px; cursor:pointer; text-align:left; transition:.25s; display:flex; flex-direction:column; justify-content:center;}
 .command-card:hover{ transform:translateX(-10px); border-color:var(--yellow); }
 .large{ grid-column:span 2; min-height:150px; text-align: center; align-items:center; }
@@ -160,430 +141,151 @@ img { pointer-events:none; }
    GACHA OVERLAYS & PREV ANIMATIONS
 ========================================= */
 #gacha-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 120;
-    display: none;
-    background: #0b0c10; /* 변경: 밝은 회색(#efefef) -> 깊은 다크 네이블랙 */
-    overflow: hidden;
+    position: fixed; inset: 0; z-index: 120; display: none; background: #0b0c10; overflow: hidden;
 }
-
-/* 127 SECTION 글자가 타이핑/스케일링 되며 나타나는 효과 */
-.flash-wrap { 
-    position: absolute; 
-    inset: 0; 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    overflow: hidden; 
-}
-
+.flash-wrap { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; overflow: hidden; }
 .flash-text {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 10;
-    font-size: 4rem;
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 800;
-    letter-spacing: .18em;
-    color: #ffffff; /* 추가: 다크모드에서 글자가 잘 보이도록 화이트 설정 */
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.793), 0 0 20px rgba(251, 255, 0, 0.3); /* 추가: 네온 글로우 효과 */
-    opacity: 0;
-    pointer-events: none;
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    z-index: 10; font-size: 4rem; font-family: 'Orbitron', sans-serif; font-weight: 800; letter-spacing: .18em;
+    color: #ffffff; text-shadow: 0 0 10px rgba(255, 255, 255, 0.793), 0 0 20px rgba(251, 255, 0, 0.3);
+    opacity: 0; pointer-events: none;
 }
-
 .flash-text span {
-    display: inline-block; 
-    opacity: 0; 
-    filter: blur(18px); 
-    transform: translateY(80px) scale(0.6) rotateX(90deg);
+    display: inline-block; opacity: 0; filter: blur(18px); transform: translateY(80px) scale(0.6) rotateX(90deg);
     animation: textBoot 3.2s cubic-bezier(0.18, 0.82, 0.22, 1) forwards;
 }
-
-/* 글자별 미세한 딜레이 부여 */
 .flash-text span:nth-child(1) { animation-delay: 0.05s; }
 .flash-text span:nth-child(2) { animation-delay: 0.18s; }
 .flash-text span:nth-child(3) { animation-delay: 0.31s; }
 .flash-text span:nth-child(4) { animation-delay: 0.48s; }
 
 @keyframes textBoot {
-    0% { 
-        opacity: 0; 
-        filter: blur(24px) brightness(2); 
-        transform: translateY(120px) scale(0.4) rotateX(90deg); 
-    }
-    25% { 
-        opacity: 1; 
-        filter: blur(0) brightness(1.6); /* 변경: 다크모드에서 더 강하게 빛나도록 조정 */
-        transform: translateY(0) scale(1.12) rotateX(0deg); 
-    }
-    38% { 
-        opacity: 1; 
-        filter: blur(0) brightness(1); 
-        transform: scale(0.96); 
-    }
-    78% { 
-        opacity: 1; 
-        filter: blur(0) brightness(1); 
-        transform: scale(1); 
-    }
-    100% { 
-        opacity: 0; 
-        filter: blur(12px); 
-        transform: scale(1.4) translateY(-40px); 
-    }
+    0% { opacity: 0; filter: blur(24px) brightness(2); transform: translateY(120px) scale(0.4) rotateX(90deg); }
+    25% { opacity: 1; filter: blur(0) brightness(1.6); transform: translateY(0) scale(1.12) rotateX(0deg); }
+    38% { opacity: 1; filter: blur(0) brightness(1); transform: scale(0.96); }
+    78% { opacity: 1; filter: blur(0) brightness(1); transform: scale(1); }
+    100% { opacity: 0; filter: blur(12px); transform: scale(1.4) translateY(-40px); }
 }
 
-/* 배경의 지직거리는 노이즈 플래시 */
 .flash-noise {
-    position: absolute; 
-    inset: -50%; 
-    mix-blend-mode: screen; /* 변경: multiply(어둡게 합성) -> screen(밝게 스크린 합성) */
-    opacity: 0; 
-    animation: noiseFlash 1.8s linear;
-    background: repeating-linear-gradient(
-        0deg, 
-        rgba(255, 255, 255, 0.03) 0px, /* 변경: 블랙 노이즈 -> 미세한 화이트/실버 노이즈 */
-        rgba(255, 255, 255, 0.03) 2px, 
-        transparent 2px, 
-        transparent 4px
-    );
+    position: absolute; inset: -50%; mix-blend-mode: screen; opacity: 0; animation: noiseFlash 1.8s linear;
+    background: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.03) 0px, rgba(255, 255, 255, 0.03) 2px, transparent 2px, transparent 4px);
 }
+@keyframes noiseFlash { 0% { opacity: 0; transform: translateY(-10%); } 20% { opacity: 0.7; } 100% { opacity: 0; transform: translateY(10%); } }
 
-@keyframes noiseFlash {
-    0% { opacity: 0; transform: translateY(-10%); }
-    20% { opacity: 0.7; }
-    100% { opacity: 0; transform: translateY(10%); }
-}
-
-/* 가로지르는 스캔 라인 애니메이션 */
 .scan-line {
-    position: absolute;
-    left: 0;
-    top: -20%;
-    width: 100%;
-    height: 220px;
-    z-index: 1;
-    background: linear-gradient(
-        180deg,
-        transparent,
-        rgba(255, 255, 255, 0.15), /* 변경: 블랙 스캔라인 -> 네온 블루빛 스캔라인 */
-        transparent
-    );
-    transform: skewY(-6deg);
+    position: absolute; left: 0; top: -20%; width: 100%; height: 220px; z-index: 1;
+    background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.15), transparent); transform: skewY(-6deg);
 }
+#gacha-overlay.active .scan-line { animation: scan 2.4s cubic-bezier(0.16, 0.84, 0.24, 1) forwards; }
+@keyframes scan { to { top: 120%; } }
 
-#gacha-overlay.active .scan-line { 
-    animation: scan 2.4s cubic-bezier(0.16, 0.84, 0.24, 1) forwards; 
-}
-
-@keyframes scan { 
-    to { top: 120%; } 
-}
-
-/* 사방으로 퍼지는 원형 링 애니메이션 */
 .scan-ring {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 0;
-    height: 0;
-    z-index: 2;
-    border-radius: 50%;
-    /* 변경: 블랙 링 -> 사이버펑크 스타일의 밝은 네온 블루/사이언 링 (기본값 변경) */
-    border: 2px solid var(--ring-color, rgba(234, 255, 0, 0.8));
-    box-shadow: 0 0 15px var(--ring-color, rgba(246, 255, 0, 0.5)); /* 추가: 링이 사방으로 퍼질 때 광원 효과 */
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 0; height: 0; z-index: 2; border-radius: 50%;
+    border: 2px solid var(--ring-color, rgba(234, 255, 0, 0.8)); box-shadow: 0 0 15px var(--ring-color, rgba(246, 255, 0, 0.5));
 }
+#gacha-overlay.active .scan-ring { animation: ring 1.8s cubic-bezier(0.16, 0.84, 0.24, 1) forwards; }
+@keyframes ring { to { width: 1200px; height: 1200px; opacity: 0; } }
+#gacha-overlay.active .flash-text { animation: flashText 2s ease forwards; }
+@keyframes flashText { 0% { opacity: 0; letter-spacing: 1em; } 20% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; letter-spacing: 0.18em; } }
 
-#gacha-overlay.active .scan-ring { 
-    animation: ring 1.8s cubic-bezier(0.16, 0.84, 0.24, 1) forwards; 
-}
-
-@keyframes ring { 
-    to { 
-        width: 1200px; /* 변경: 화면 전체를 덮을 수 있도록 가청 반경 확장 */
-        height: 1200px; 
-        opacity: 0; 
-    } 
-}
-
-#gacha-overlay.active .flash-text { 
-    animation: flashText 2s ease forwards; 
-}
-
-@keyframes flashText { 
-    0% { opacity: 0; letter-spacing: 1em; } 
-    20% { opacity: 1; } 
-    70% { opacity: 1; } 
-    100% { opacity: 0; letter-spacing: 0.18em; } 
-}
 /* =========================================
    SSR CINEMATIC & REVEAL
 ========================================= */
-/* ================= SSR CINEMATIC & REVEAL SYSTEM ================= */
+#single-reveal { position: fixed; inset: 0; z-index: 99999; background-color: #030303; display: flex; justify-content: center; align-items: center; }
+#reveal-content { width: 100%; height: 100%; }
 
-/* 결과 화면 전체를 덮는 검은 배경 래퍼 */
-#single-reveal {
-    position: fixed;
-    inset: 0;
-    /* wrapper 내부의 쌓임 맥락 자체를 이겨버리도록 대폭 상향 */
-    z-index: 99999; 
-    background-color: #030303;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+.ssr-cinematic { position: relative; width: 100%; height: 100%; overflow: hidden; background: #1c1c1c; }
+.ssr-silhouette, .ssr-image { position: absolute; inset: 0; background-size: cover; background-position: center; background-repeat: no-repeat; }
+.ssr-image { opacity: 0; transform: scale(1.06) translateX(30px); transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.2s ease; z-index: 2; }
+.ssr-silhouette { z-index: 3; filter: brightness(0) contrast(1.4) blur(4px); opacity: 0.9; transform: scale(1.08); animation: silhouetteHold 2s ease forwards; }
 
-#reveal-content {
-    width: 100%;
-    height: 100%;
-}
+@keyframes silhouetteHold { 0% { opacity: 0; transform: scale(1.2); } 100% { opacity: 0.9; transform: scale(1.08); } }
 
-/* 시네마틱 연출 컨테이너 (이 안에서 모든 이미지가 겹침) */
-.ssr-cinematic {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background: #1c1c1c;
-}
+.ssr-type { position: absolute; top: 15%; left: 8%; z-index: 10; font-family: 'Orbitron', sans-serif; font-size: 2.5rem; font-weight: 700; color: rgba(255, 255, 255, 0.85); letter-spacing: 6px; text-shadow: 0 0 15px rgba(255,255,255,0.4); }
+.ssr-ui { position: absolute; bottom: 12%; left: 8%; z-index: 10; opacity: 0; transform: translateY(40px); transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 1s ease; transition-delay: 0.2s; }
+.ssr-rank { font-family: 'Orbitron', sans-serif; font-size: 4rem; font-weight: 900; color: #ffcc00; letter-spacing: 2px; text-shadow: 0 0 25px rgba(255, 204, 0, 0.7); line-height: 1; }
+.ssr-name { font-family: 'Pretendard', sans-serif; font-size: 2.2rem; font-weight: 700; color: #ffffff; margin-top: 8px; letter-spacing: 1px; }
 
-/* 실루엣과 완본 일러스트를 전체 화면으로 설정 */
-.ssr-silhouette, .ssr-image {
-    position: absolute;
-    inset: 0;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
+.ssr-cinematic.reveal .ssr-image { opacity: 1; transform: scale(1) translateX(0); }
+.ssr-cinematic.reveal .ssr-ui { opacity: 1; transform: translateY(0); }
+.ssr-cinematic.reveal .ssr-silhouette { opacity: 0 !important; filter: brightness(0) blur(40px); transform: scale(1.18); pointer-events: none; transition: 1.2s ease; }
 
-/* 1. 기본 상태: 본 일러스트는 투명하게 숨김 */
-.ssr-image {
-    opacity: 0;
-    transform: scale(1.06) translateX(30px);
-    transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.2s ease;
-    z-index: 2;
-}
+#type-target::after { content: '_'; animation: cursorBlink 0.7s infinite; }
+@keyframes cursorBlink { 50% { opacity: 0; } }
 
-/* 2. 기본 상태: 실루엣은 전면에 배치되고 어둡게 처리됨 */
-.ssr-silhouette {
-    z-index: 3;
-    filter: brightness(0) contrast(1.4) blur(4px); 
-    opacity: 0.9; 
-    transform: scale(1.08);
-    animation: silhouetteHold 2s ease forwards;
-}
+#ssr-masonry-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 999; background: #0d0d0d; display: none; overflow: hidden; }
+.masonry-list { position: relative; width: 100%; height: 100%; }
 
-@keyframes silhouetteHold {
-    0% { opacity: 0; transform: scale(1.2); }
-    100% { opacity: 0.9; transform: scale(1.08); }
-}
+/* 🔥 최적화: width, height 제거 후 transform, opacity만 남김 */
+.masonry-item-wrapper { position: absolute; will-change: transform, opacity; padding: 8px; top: 0; left: 0; }
 
-/* 3. 타이핑되는 텍스트 위치 (좌측 상단) */
-.ssr-type {
-    position: absolute;
-    top: 15%;
-    left: 8%;
-    z-index: 10;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.85);
-    letter-spacing: 6px;
-    text-shadow: 0 0 15px rgba(255,255,255,0.4);
-}
+/* 🔥 최적화: 무거운 filter 속성 제거 및 그림자 부하 감소 */
+.masonry-item-wrapper > .masonry-item-img { position: relative; background-size: cover; background-position: center center; width: 100%; height: 100%; border-radius: 12px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.6); }
 
-/* 4. 캐릭터 이름 및 등급 UI 위치 (좌측 하단) */
-.ssr-ui {
-    position: absolute;
-    bottom: 12%;
-    left: 8%;
-    z-index: 10;
-    opacity: 0; /* 처음엔 숨김 */
-    transform: translateY(40px);
-    transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 1s ease;
-    transition-delay: 0.2s;
-}
-
-.ssr-rank {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 4rem;
-    font-weight: 900;
-    color: #ffcc00;
-    letter-spacing: 2px;
-    text-shadow: 0 0 25px rgba(255, 204, 0, 0.7);
-    line-height: 1;
-}
-
-.ssr-name {
-    font-family: 'Pretendard', sans-serif;
-    font-size: 2.2rem;
-    font-weight: 700;
-    color: #ffffff;
-    margin-top: 8px;
-    letter-spacing: 1px;
-}
-
-/* ================= REVEAL (타이핑 종료 후 발동되는 전환 효과) ================= */
-
-/* 클래스 추가 시 본 일러스트 등장 */
-.ssr-cinematic.reveal .ssr-image { 
-    opacity: 1; 
-    transform: scale(1) translateX(0); 
-}
-
-/* 클래스 추가 시 하단 UI 등장 */
-.ssr-cinematic.reveal .ssr-ui { 
-    opacity: 1; 
-    transform: translateY(0); 
-}
-
-/* 클래스 추가 시 실루엣 소멸 */
-.ssr-cinematic.reveal .ssr-silhouette {
-    opacity: 0 !important; 
-    filter: brightness(0) blur(40px); 
-    transform: scale(1.18);
-    pointer-events: none; 
-    transition: 1.2s ease;
-}
-
-/* 타이핑 커서 깜빡임 애니메이션 */
-#type-target::after {
-    content: '_';
-    animation: cursorBlink 0.7s infinite;
-}
-@keyframes cursorBlink {
-    50% { opacity: 0; }
-}
-/* ==========================================================================
-   [수정] MASONRY OVERLAY - UI SCALE WRAPPER 내부 귀속 및 레이어 순서 정형화
-   ========================================================================== */
-#ssr-masonry-overlay {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    z-index: 999; /* wrapper 내부에서는 최상위 */
-    background: #0d0d0d;
-    display: none;
-    overflow: hidden;
-}
-
-/* 이미지 타일들이 배치될 컨테이너 */
-.masonry-list { 
-    position: relative; 
-    width: 100%; 
-    height: 100%; 
-}
-
-/* 개별 이미지 타일의 래퍼 */
-.masonry-item-wrapper { 
-    position: absolute; 
-    will-change: transform, width, height, opacity; 
-    padding: 8px; 
-    top: 0; 
-    left: 0; 
-}
-
-/* 실제 이미지가 표시되는 내부 요소 */
-.masonry-item-wrapper > .masonry-item-img {
-    position: relative; 
-    background-size: cover; 
-    background-position: center center; 
-    width: 100%; 
-    height: 100%;
-    border-radius: 12px; 
-    box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.4); 
-    filter: grayscale(0.2) contrast(1.1);
-}
-
-.ssr-silhouette {
-    filter: brightness(0) contrast(1.4) blur(4px); 
-    opacity: 0.9; 
-    transform: scale(1.08);
-    animation: silhouetteHold 2s ease forwards;
-}
-
-@keyframes silhouetteHold {
-    0% { opacity: 0; transform: scale(1.2); }
-    100% { opacity: 0.9; transform: scale(1.08); }
-}
-
-/* REVEAL (클래스 추가 시 발동되는 전환 효과) */
-.ssr-cinematic.reveal .ssr-image { 
-    opacity: 1; 
-    transform: scale(1) translateX(0); 
-}
-
-.ssr-cinematic.reveal .ssr-ui { 
-    opacity: 1; 
-    transform: translateY(0); 
-}
-
-.ssr-cinematic.reveal .ssr-silhouette {
-    opacity: 0 !important; 
-    filter: brightness(0) blur(40px); 
-    transform: scale(1.18);
-    pointer-events: none; 
-    transition: 1.2s ease;
-}
-.tactical-reveal { width: 520px; padding: 60px 40px; background: rgba(10, 10, 10, 0.8); border: 2px solid; clip-path: var(--clip); text-align: center; animation: itemAppear 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
+.tactical-reveal { width: 520px; padding: 60px 40px; margin-left: 330px; background: rgba(10, 10, 10, 0.8); border: 2px solid; clip-path: var(--clip); text-align: center; animation: itemAppear 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
 .tactical-reveal .reveal-icon { font-size: 8rem; margin-bottom: 28px; }
 .tactical-reveal .reveal-name { margin: 0; font-size: 2.2rem; font-weight: 800; font-family:'Orbitron';}
 
 /* =========================================
-   RESULT SCREEN (No scroll, Fit to Grid)
+   RESULT & INVENTORY GRIDS (SCROLL & ALIGN)
 ========================================= */
-.result-container { position: fixed; inset: 0; z-index: 2000; background: rgba(4 4 4 / 68%); backdrop-filter: blur(25px); padding: 50px 80px; display: none; flex-direction: column; align-items: center; justify-content:center;}
+/* 🔥 최적화: 거대한 배경의 backdrop-filter 블러 대폭 축소 및 background 불투명도 증가 */
+.result-container { position: fixed; inset: 0; z-index: 2000; background: rgba(4, 4, 4, 0.85); backdrop-filter: blur(8px); padding: 50px 80px; display: none; flex-direction: column; align-items: center; justify-content:center;}
 .result-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 24px; width:100%; max-width: 1400px; margin-bottom: 30px;}
 .header-tagline { font-family: 'Orbitron', sans-serif; letter-spacing: 3px; color: rgba(255,255,255,0.4); }
 
-/* 10연차가 스크롤 없이 한 화면에 나오도록 구성 */
-.result-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 16px;
-  width: 100%;
-  max-width: 1400px;
-  max-height: 70vh; /* 화면을 넘지 않게 제한 */
-  align-content: center; /* 그리드 내 중앙 정렬 */
+.result-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; width: 100%; max-width: 1400px; max-height: 70vh; align-content: center; }
+
+/* Grid Item - 고정 높이 260px 적용 */
+.grid-item { 
+    background: #0d0d0d; border: 1px solid rgba(255, 255, 255, 0.1); 
+    height: 320px; position: relative; overflow: hidden; opacity: 0; 
+    transform: perspective(1000px) rotateX(-15deg) translateY(30px); 
+    animation: itemAppear 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards; 
+    clip-path: var(--clip); 
 }
 
-.grid-item { background: #0d0d0d; border: 1px solid rgba(255, 255, 255, 0.1); position: relative; overflow: hidden; opacity: 0; transform: perspective(1000px) rotateX(-15deg) translateY(30px); animation: itemAppear 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards; clip-path: var(--clip); }
-.item-inner { width: 100%; display: flex; flex-direction: column; height: 100%; }
+/* 세로 중앙 정렬 및 Flex 배치 */
+.item-inner { 
+    width: 100%; height: 100%; display: flex; flex-direction: column; 
+    justify-content: center; align-items: center; 
+}
 
-/* 결과창 비율 축소 - 10개 한 화면에 맞춤 */
-.result-grid .image-holder { height: 160px; background:#111; }
-.inventory-grid .image-holder {background:#111; }
-
+/* 이미지 영역 고정 높이 및 찌그러짐 방지 */
+.image-holder { 
+    width: 100%; height: 230px; background: #111; position: relative;
+    display: flex; justify-content: center; align-items: center; flex-shrink: 0; 
+}
 .image-holder img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
 .grid-item:hover .image-holder img { transform: scale(1.06); }
 .image-holder::after { content: ''; position: absolute; top: 0; left: -150%; width: 50%; height: 100%; background: linear-gradient(to right, transparent, rgba(255,255,255,0.12), transparent); transform: skewX(-25deg); }
 .grid-item:hover .image-holder::after { animation: shineSwipe 0.8s ease-out; }
 
-.item-details { padding: 14px; border-top: 1px solid rgba(255, 255, 255, 0.05); flex:1; display:flex; flex-direction:column; justify-content:center;}
+/* 하단 텍스트 영역 중앙 정렬 */
+.item-details { 
+    width: 100%; padding: 10px; border-top: 1px solid rgba(255, 255, 255, 0.05); 
+    flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; 
+}
 .rarity-badge { font-family: 'Orbitron', sans-serif; font-size: 0.75rem; letter-spacing: 2px; margin-bottom: 6px; }
 .item-name { font-size: 1.1rem; font-weight: 600; letter-spacing: 1px; }
 
-.rarity-ssr { border-left: 4px solid var(--color-ssr); }
-.rarity-ssr .rarity-badge { color: var(--color-ssr); }
-.rarity-sr  { border-left: 4px solid var(--color-sr); }
-.rarity-sr  .rarity-badge { color: var(--color-sr); }
-.rarity-r   { border-left: 4px solid var(--color-r); }
-.rarity-r   .rarity-badge { color: var(--color-r); }
+.rarity-ssr { border-left: 4px solid var(--color-ssr); } .rarity-ssr .rarity-badge { color: var(--color-ssr); }
+.rarity-sr  { border-left: 4px solid var(--color-sr); }  .rarity-sr  .rarity-badge { color: var(--color-sr); }
+.rarity-r   { border-left: 4px solid var(--color-r); }   .rarity-r   .rarity-badge { color: var(--color-r); }
 
 /* =========================================
    INVENTORY OVERLAY & FILTERS
 ========================================= */
-#inv-overlay { position: fixed; inset: 0; z-index: 1500; display: none; backdrop-filter: blur(15px); }
+/* 🔥 최적화: 인벤토리 오버레이의 과도한 blur 감소 및 백그라운드 색상 조정 */
+#inv-overlay { position: fixed; inset: 0; z-index: 1500; display: none; background: rgba(5, 5, 5, 0.85); backdrop-filter: blur(4px); }
+
+/* 패널 내부 세로 정렬 지정 */
 #inv-panel { 
-    position: fixed; /* absolute에서 fixed로 변경 */
-    z-index: 1501;   /* 오버레이(1500)보다 상위로 배치 */
-    left: 50%; top: 50%; width: 90vw; max-width:1500px; height: 85vh; 
-    transform: translate(-50%, -45%); background: #090909; 
-    border: 1px solid rgba(255,255,255,0.1); padding: 40px; 
+    position: fixed; z-index: 1501; left: 50%; top: 50%; width: 90vw; max-width:1500px; height: 85vh; 
+    transform: translate(-50%, -45%); background: #090909; border: 1px solid rgba(255,255,255,0.1); padding: 40px; 
     opacity:0; visibility:hidden; transition:.4s ease; clip-path: var(--clip); 
+    display: flex; flex-direction: column; 
 }
 #inv-panel.open { transform: translate(-50%, -50%); opacity:1; visibility:visible; }
 
@@ -592,7 +294,12 @@ img { pointer-events:none; }
 .inventory-actions { display: flex; gap:16px; }
 #inv-filter, .close-btn { height: 50px; background: #111; border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 0 24px; font-family: 'Pretendard', sans-serif; letter-spacing: 1px; cursor: pointer; clip-path: var(--clip); outline: none;}
 #inv-filter:hover, .close-btn:hover { background: #fff; color: #000; }
-.inventory-grid { margin-top: 30px; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; overflow-y: auto; height:calc(100% - 100px); padding-right:10px;}
+
+/* 스크롤 가능 구역 설정 */
+.inventory-grid { 
+    margin-top: 30px; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+    gap: 20px; overflow-y: auto; flex: 1; padding-right: 10px; align-content: start; 
+}
 
 /* =========================================
    MISCELLANEOUS
@@ -608,12 +315,9 @@ img { pointer-events:none; }
 @keyframes itemAppear { to { opacity: 1; transform: perspective(1000px) rotateX(0deg) translateY(0); } }
 @keyframes shineSwipe { to { left: 150%; } }
 
-#target-cursor{ position:fixed; left:0; top:0; width:0; height:0; pointer-events:none; z-index:999999; mix-blend-mode:difference; }
-.cursor-dot{ position:absolute; left:50%; top:50%; width:5px; height:5px; border-radius:50%; background:#fff; transform:translate(-50%,-50%); }
-.cursor-box{ position:absolute; left:50%; top:50%; width:36px; height:36px; border:2px solid #fff; transform:translate(-50%,-50%) rotate(45deg); }
-
-#rate-popup { position: fixed; inset: 0; z-index: 500; display: none; justify-content: center; align-items: center; background: rgba(0, 0, 0, 0.7); backdrop-filter:blur(10px);}
-.rate-box { width: 420px; padding: 34px; background: #111; border: 1px solid rgba(255, 255, 255, 0.2); clip-path: var(--clip); box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+/* 🔥 최적화: 팝업 백그라운드 블러 수치 조정 */
+#rate-popup { position: fixed; inset: 0; z-index: 500; display: none; justify-content: center; align-items: center; background: rgba(0, 0, 0, 0.85); backdrop-filter:blur(4px);}
+.rate-box { width: 420px; padding: 34px; background: #111; border: 1px solid rgba(255, 255, 255, 0.2); clip-path: var(--clip); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
 .rate-title { margin-top: 0; font-family: 'Orbitron', sans-serif; color:var(--yellow);}
 .rate-section { margin-top:24px; }
 .rate-heading { margin-bottom:12px; font-family:'Orbitron'; letter-spacing:.08em; font-size:.9rem; color:#fff;}
@@ -622,7 +326,34 @@ img { pointer-events:none; }
 .sr-rate { font-family:'Orbitron'; color:var(--color-sr); }
 .r-rate { font-family:'Orbitron'; color:white; }
 
-/* 스크롤바 커스터마이징 */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); }
 
+/* =========================================
+   BANNER SWIPE ANIMATION
+========================================= */
+@keyframes bannerSwipe {
+    0% {
+        opacity: 0.1;
+        transform: translate(-45%, -50%) skewX(-1deg);
+        filter: blur(2px);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) skewX(0deg);
+        filter: blur(0);
+    }
+}
+
+.banner-panel.swipe-anim {
+    animation: bannerSwipe 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes imageSwipe {
+    0% { transform: scale(1.15) translateX(5%); }
+    100% { transform: scale(1) translateX(0); }
+}
+
+.banner-panel.swipe-anim .banner-preview img {
+    animation: imageSwipe 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}

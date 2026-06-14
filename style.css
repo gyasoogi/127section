@@ -386,3 +386,52 @@ body{
   border-right: none; border-top: none;
   transform: translate(-18px, 6px);
 }
+
+/* =========================================
+   DIFFICULTY SELECTION OVERLAY
+========================================= */
+.difficulty-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 5, 5, 0.95);
+  backdrop-filter: blur(15px);
+  z-index: 99990; /* 다른 UI 요소들보다 위에 배치 (커서 제외) */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.diff-container { text-align: center; }
+.diff-title { font-family: 'Orbitron', sans-serif; font-size: 4rem; color: var(--yellow); letter-spacing: 4px; }
+.diff-sub { opacity: 0.5; font-size: 1.2rem; letter-spacing: 3px; margin-bottom: 50px; }
+
+.diff-cards { display: flex; gap: 40px; justify-content: center; }
+
+.diff-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  width: 280px;
+  padding: 50px 20px;
+  cursor: pointer;
+  transition: 0.3s;
+  clip-path: var(--clip);
+  position: relative;
+}
+
+.diff-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateY(-10px);
+}
+
+.diff-card h2 { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; margin-bottom: 15px; color: #fff; letter-spacing: 2px;}
+.diff-card p { opacity: 0.7; font-size: 1.1rem; letter-spacing: 2px; }
+
+.diff-bar { position: absolute; bottom: 0; left: 0; height: 6px; width: 100%; transition: 0.3s; }
+.easy-bar { background: #8cff8c; }
+.normal-bar { background: #4da6ff; }
+.hard-bar { background: var(--red); }
+
+.diff-card:hover .easy-bar { box-shadow: 0 0 20px #8cff8c; }
+.diff-card:hover .normal-bar { box-shadow: 0 0 20px #4da6ff; }
+.diff-card:hover .hard-bar { box-shadow: 0 0 20px var(--red); }

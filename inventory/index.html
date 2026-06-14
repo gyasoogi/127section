@@ -132,25 +132,7 @@
   <div class="grid-bg"></div>
   <div class="scan-lines"></div>
 
-  <div id="ui-scale-wrapper">
-    <a href="/index.html" style="
-        position: fixed;
-        left: 60px;
-        bottom: 60px;
-        z-index: 9999;
-        font-size: 1.1rem;
-        letter-spacing: 4px;
-        font-weight: 400;
-        color: rgb(0, 0, 0);
-        text-decoration: none;
-        font-family: 'Orbitron', 'Pretendard', sans-serif;
-        display: inline-block;
-        transition: transform 0.2s ease, color 0.2s ease;
-    " onmouseover="this.style.transform='scale(1.1)'; this.style.color='#f39c12';" 
-    onmouseout="this.style.transform='scale(1)'; this.style.color='#ffffff';">
-        BACK TO MAIN
-    </a>
-    
+  <div id="ui-scale-wrapper">    
     <div class="relative w-[1300px] h-[800px] flex box-border border border-[var(--line-strong)] bg-[rgba(255,255,255,0.4)] backdrop-blur-sm">
       
       <div class="absolute -top-1 -left-1 w-4 h-4 border-t-[3px] border-l-[3px] border-black z-50"></div>
@@ -163,15 +145,35 @@
         <div class="text-[var(--sub)] text-[10px] tracking-[4px] mb-1 font-bold uppercase">FILE NO.</div>
         <div id="sidebar-file-no" class="font-orbitron text-black text-3xl font-bold tracking-[6px] border-b border-[var(--line-strong)] pb-3 mb-6">010</div>
         
-        <div id="barcode" class="flex gap-[2px] h-12 w-full px-4 opacity-40 mb-6 mix-blend-multiply"></div>
+        <div id="barcode" class="flex gap-[2px] h-12 w-full px-4 opacity-40 mb-6 mix-blend-multiply" style="
+    margin-left: 15px;
+"></div>
         
         <div id="sidebar-icons" class="flex-1 flex flex-col items-center justify-start gap-3 w-full overflow-y-auto py-2">
         </div>
 
         <div class="mt-auto flex flex-col items-center gap-2 pt-4 w-full">
-          <div class="w-12 h-[1px] bg-[var(--line-strong)] mb-1"></div>
-          <div class="text-[var(--sub)] text-[10px] tracking-[4px] uppercase font-bold">UF-ARCHIVE</div>
-          <div class="text-[var(--sub)] text-[9px] tracking-[2px] opacity-70">v.1.0.0</div>
+          <div class="w-12 h-[1px] bg-[var(--line-strong)] mb-1" style="margin-bottom: 70px;"></div>
+              <a href="/index.html" style="
+              position: fixed;
+              left: 25px;
+              bottom: 40px;
+              z-index: 9999;
+              font-size: 0.9rem;
+              letter-spacing: 4px;
+              font-weight: 400;
+              color: #3a3a3a;
+              text-decoration: none;
+              font-family: 'Rajdhani', sans-serif;
+              display: inline-block;
+              white-space: pre-line;
+              text-align: center;
+              transition: transform 0.2s ease, color 0.2s ease;
+          " onmouseover="this.style.transform='scale(1.1)'; this.style.color='#3a3a3a';" 
+            onmouseout="this.style.transform='scale(1)'; this.style.color='#3a3a3a';">
+                BACK
+                TO MAIN
+          </a>
         </div>
       </div>
 
@@ -179,7 +181,7 @@
         
         <div class="flex justify-between items-center mb-6">
           <div class="flex items-center gap-4">
-            <div class="w-6 h-6 border border border-[var(--line-strong)] flex items-center justify-center">
+            <div class="w-6 h-6 border border-[var(--line-strong)] flex items-center justify-center">
               <div class="w-2 h-2 bg-black"></div>
             </div>
             <div class="text-[var(--text)] text-xs tracking-[4px] font-bold uppercase flex items-center gap-2">
@@ -246,13 +248,6 @@
             </div>
             <div class="flex border-b border-[var(--line)] pb-2 items-center justify-between">
               <div class="flex items-center">
-                <div class="w-2 h-2 bg-transparent border border-black mr-3"></div>
-                <span class="text-[var(--sub)]">Affiliation</span>
-              </div>
-              <span id="stat-affiliation" class="text-black text-right">UNKNOWN FUTURE</span>
-            </div>
-            <div class="flex border-b border-[var(--line)] pb-2 items-center justify-between">
-              <div class="flex items-center">
                 <div class="w-2 h-2 bg-black mr-3"></div>
                 <span class="text-[var(--sub)]">Position</span>
               </div>
@@ -308,7 +303,6 @@
             <h3 class="font-orbitron text-black font-bold tracking-[4px] text-lg">SKILL_SET</h3>
           </div>
           
-          <!-- 스킬 컨테이너 내부 스크롤 패딩 처리 -->
           <div id="skills-container" class="flex flex-col gap-2 max-h-[260px] pr-1"></div>
         </div>
 
@@ -353,7 +347,7 @@
     const CHARACTERS = [
   {
     code: "001", codeStr: "MD_001", name: "문대", englishName: "MOONDAE",
-    height: "177cm", weight: "60kg", affiliation: "TeSTAR", position: "전술 보조 / 기동 버퍼",
+    height: "178cm", weight: "60kg", affiliation: "UNDETECTED", position: "전술 보조 / 기동 버퍼",
     icon: "activity",
     notes: "전장의 흐름을 읽고 통제하는 사령탑. 전투력은 낮으나, 압도적인 기동 속도(2.0)로 전장을 누비며 아군 전체의 행동 반경을 넓힌다.",
     stats: [
@@ -370,8 +364,42 @@
     ]
   },
   {
+    code: "007", codeStr: "EJ_007", name: "유진", englishName: "EUGYIN",
+    height: "180cm", weight: "62kg", affiliation: "UNDETECTED", position: "광역 제압 / 디버퍼",
+    icon: "wind",
+    notes: "적의 진형을 천천히 갉아먹는 유격수. 공격 시 광범위한 적에게 지속 피해를 입혀 다대일 전투에서 탁월한 성능을 보인다.",
+    stats: [
+      { label: '전투력', sub: 'COMBAT', value: 45, grade: 'C' },
+      { label: '기동력', sub: 'MOBILITY', value: 70, grade: 'B' },
+      { label: '체력', sub: 'VITALITY', value: 45, grade: 'C' },
+      { label: '정신력', sub: 'MENTAL', value: 70, grade: 'B' },
+      { label: '잠재력', sub: 'POTENTIAL', value: 80, grade: 'A' },
+      { label: '판단력', sub: 'CONTROL', value: 75, grade: 'B' }
+    ],
+    skills: [
+      { icon: 'activity', name: '광역 도트 피해', desc: '공격 시 범위 내의 적들에게 중독/연소와 같은 지속 피해를 부여한다.', level: 3 }
+    ]
+  },
+  {
+    code: "006", codeStr: "RB_006", name: "래빈", englishName: "RABIN",
+    height: "183cm", weight: "65kg", affiliation: "UNDETECTED", position: "근접 타격 / 브루저",
+    icon: "hexagon",
+    notes: "적진을 돌파하는 근접 전투의 스페셜리스트. 준수한 체력(450)과 강력한 공격력(70)을 바탕으로 초근접전에서 파괴적인 타격을 가한다.",
+    stats: [
+      { label: '전투력', sub: 'COMBAT', value: 80, grade: 'A' },
+      { label: '기동력', sub: 'MOBILITY', value: 65, grade: 'B' },
+      { label: '체력', sub: 'VITALITY', value: 70, grade: 'B' },
+      { label: '정신력', sub: 'MENTAL', value: 60, grade: 'C' },
+      { label: '잠재력', sub: 'POTENTIAL', value: 85, grade: 'A' },
+      { label: '판단력', sub: 'CONTROL', value: 65, grade: 'C' }
+    ],
+    skills: [
+      { icon: 'zap', name: '초근접 한방 타격', desc: '가까이 접근한 적군에게 강력하고 치명적인 단일 타격을 입힌다.', level: 3 }
+    ]
+  },
+  {
     code: "002", codeStr: "AH_002", name: "아현", englishName: "AHYEON",
-    height: "174cm", weight: "58kg", affiliation: "TeSTAR", position: "의무 지원 / 서포터",
+    height: "174cm", weight: "58kg", affiliation: "UNDETECTED", position: "의무 지원 / 서포터",
     icon: "heart",
     notes: "위급 상황에서 진가를 발휘하는 전장의 구호자. 적의 접근을 차단함과 동시에 피해를 입은 아군을 신속하게 회복시킨다.",
     stats: [
@@ -388,43 +416,8 @@
     ]
   },
   {
-    code: "003", codeStr: "BS_003", name: "큰세진", englishName: "BIGSEJIN",
-    height: "181cm", weight: "68kg", affiliation: "TeSTAR", position: "전선 방위 / 메인 탱커",
-    icon: "shield",
-    notes: "가장 높은 체력(1100)을 보유한 최전선 방어의 핵심. 적의 시선을 끌어모으며 강력한 넉백으로 진형을 무너뜨린다.",
-    stats: [
-      { label: '전투력', sub: 'COMBAT', value: 12, grade: 'E' },
-      { label: '기동력', sub: 'MOBILITY', value: 40, grade: 'D' },
-      { label: '체력', sub: 'VITALITY', value: 99, grade: 'SS' },
-      { label: '정신력', sub: 'MENTAL', value: 75, grade: 'B' },
-      { label: '잠재력', sub: 'POTENTIAL', value: 70, grade: 'B' },
-      { label: '판단력', sub: 'CONTROL', value: 85, grade: 'A' }
-    ],
-    skills: [
-      { icon: 'zap', name: '강력 넉백', desc: '전방의 적들에게 묵직한 일격을 가해 크게 밀쳐낸다.', level: 3 },
-      { icon: 'target', name: '시선 집중', desc: '어그로를 극대화하여 적의 모든 공격을 자신에게 돌린다.', level: 3 }
-    ]
-  },
-  {
-    code: "004", codeStr: "MS_004", name: "작은세진", englishName: "MINISEJIN",
-    height: "174cm", weight: "59kg", affiliation: "TeSTAR", position: "화력 지원 / 공격 버퍼",
-    icon: "arrow-up",
-    notes: "아군의 화력을 극대화하는 전장의 기폭제. 비교적 저렴한 코스트($180) 대비 뛰어난 효율로 팀 전체의 파괴력을 상승시킨다.",
-    stats: [
-      { label: '전투력', sub: 'COMBAT', value: 25, grade: 'D' },
-      { label: '기동력', sub: 'MOBILITY', value: 70, grade: 'B' },
-      { label: '체력', sub: 'VITALITY', value: 40, grade: 'D' },
-      { label: '정신력', sub: 'MENTAL', value: 80, grade: 'A' },
-      { label: '잠재력', sub: 'POTENTIAL', value: 90, grade: 'S' },
-      { label: '판단력', sub: 'CONTROL', value: 75, grade: 'B' }
-    ],
-    skills: [
-      { icon: 'flame', name: '화력 증폭', desc: '모든 아군 개체의 공격력을 35% 증가시킨다.', level: 3 }
-    ]
-  },
-  {
     code: "005", codeStr: "CW_005", name: "청우", englishName: "CHONGWOO",
-    height: "186cm", weight: "73kg", affiliation: "TeSTAR", position: "원거리 타격 / 관통 저격수",
+    height: "186cm", weight: "73kg", affiliation: "UNDETECTED", position: "원거리 타격 / 관통 저격수",
     icon: "crosshair",
     notes: "압도적인 공격력(150)과 사거리(1000)를 지닌 스나이퍼. 기동성은 낮으나 최후방에서 적의 방어선을 꿰뚫는 치명적인 관통상을 입힌다.",
     stats: [
@@ -441,37 +434,38 @@
     ]
   },
   {
-    code: "006", codeStr: "RB_006", name: "래빈", englishName: "RABIN",
-    height: "183cm", weight: "65kg", affiliation: "TeSTAR", position: "근접 타격 / 브루저",
-    icon: "hexagon",
-    notes: "적진을 돌파하는 근접 전투의 스페셜리스트. 준수한 체력(450)과 강력한 공격력(70)을 바탕으로 초근접전에서 파괴적인 타격을 가한다.",
+    code: "003", codeStr: "BS_003", name: "큰세진", englishName: "BIGSEJIN",
+    height: "181cm", weight: "68kg", affiliation: "UNDETECTED", position: "전선 방위 / 메인 탱커",
+    icon: "shield",
+    notes: "준수한 육각형 스텟의 유닛. 적의 시선을 끌어모아 강력한 넉백으로 진형을 무너뜨린다.",
     stats: [
-      { label: '전투력', sub: 'COMBAT', value: 80, grade: 'A' },
-      { label: '기동력', sub: 'MOBILITY', value: 65, grade: 'B' },
+      { label: '전투력', sub: 'COMBAT', value: 70, grade: 'B' },
+      { label: '기동력', sub: 'MOBILITY', value: 60, grade: 'D' },
       { label: '체력', sub: 'VITALITY', value: 70, grade: 'B' },
-      { label: '정신력', sub: 'MENTAL', value: 60, grade: 'C' },
-      { label: '잠재력', sub: 'POTENTIAL', value: 85, grade: 'A' },
-      { label: '판단력', sub: 'CONTROL', value: 65, grade: 'C' }
+      { label: '정신력', sub: 'MENTAL', value: 75, grade: 'B' },
+      { label: '잠재력', sub: 'POTENTIAL', value: 99, grade: 'SS' },
+      { label: '판단력', sub: 'CONTROL', value: 85, grade: 'A' }
     ],
     skills: [
-      { icon: 'zap', name: '초근접 한방 타격', desc: '가까이 접근한 적군에게 강력하고 치명적인 단일 타격을 입힌다.', level: 3 }
+      { icon: 'zap', name: '강력 넉백', desc: '전방의 적들에게 묵직한 일격을 가해 크게 밀쳐낸다.', level: 3 },
+      { icon: 'target', name: '시선 집중', desc: '어그로를 극대화하여 적의 모든 공격을 자신에게 돌린다.', level: 3 }
     ]
   },
   {
-    code: "007", codeStr: "EJ_007", name: "유진", englishName: "EUGYIN",
-    height: "180cm", weight: "62kg", affiliation: "TeSTAR", position: "광역 제압 / 디버퍼",
-    icon: "wind",
-    notes: "적의 진형을 천천히 갉아먹는 유격수. 공격 시 광범위한 적에게 지속 피해를 입혀 다대일 전투에서 탁월한 성능을 보인다.",
+    code: "004", codeStr: "MS_004", name: "작은세진", englishName: "MINISEJIN",
+    height: "174cm", weight: "59kg", affiliation: "UNDETECTED", position: "화력 지원 / 공격 버퍼",
+    icon: "arrow-up",
+    notes: "아군의 화력을 극대화하는 전장의 기폭제. 비교적 저렴한 코스트($180) 대비 뛰어난 효율로 팀 전체의 파괴력을 상승시킨다.",
     stats: [
-      { label: '전투력', sub: 'COMBAT', value: 45, grade: 'C' },
+      { label: '전투력', sub: 'COMBAT', value: 25, grade: 'D' },
       { label: '기동력', sub: 'MOBILITY', value: 70, grade: 'B' },
-      { label: '체력', sub: 'VITALITY', value: 45, grade: 'C' },
-      { label: '정신력', sub: 'MENTAL', value: 70, grade: 'B' },
-      { label: '잠재력', sub: 'POTENTIAL', value: 80, grade: 'A' },
+      { label: '체력', sub: 'VITALITY', value: 40, grade: 'D' },
+      { label: '정신력', sub: 'MENTAL', value: 80, grade: 'A' },
+      { label: '잠재력', sub: 'POTENTIAL', value: 90, grade: 'S' },
       { label: '판단력', sub: 'CONTROL', value: 75, grade: 'B' }
     ],
     skills: [
-      { icon: 'activity', name: '광역 도트 피해', desc: '공격 시 범위 내의 적들에게 중독/연소와 같은 지속 피해를 부여한다.', level: 3 }
+      { icon: 'flame', name: '화력 증폭', desc: '모든 아군 개체의 공격력을 35% 증가시킨다.', level: 3 }
     ]
   }
     ];
@@ -517,7 +511,6 @@
         document.getElementById('info-sub-label').textContent = data.affiliation;
         
         document.getElementById('stat-height').textContent = data.height;
-        document.getElementById('stat-affiliation').textContent = data.affiliation;
         document.getElementById('stat-position').textContent = data.position;
         document.getElementById('info-notes').innerHTML = data.notes;
 
@@ -532,7 +525,6 @@
             indicators += `<div class="w-3 h-1 ${i < skill.level ? 'bg-black' : 'bg-[var(--line)]'}"></div>`;
           }
           return `
-            <!-- 고정 높이 h-[80px] 및 압축 방지 shrink-0 속성 부여 완료 -->
             <div class="flex h-[70px] shrink-0 border border-[var(--line-strong)] bg-[rgba(255,255,255,0.4)] px-3 items-center hover:bg-white hover:border-black transition-colors group cursor-pointer relative overflow-hidden">
               <div class="absolute top-0 left-0 w-1 h-full bg-black scale-y-0 group-hover:scale-y-100 transition-transform origin-top"></div>
               <div class="w-12 h-12 border border-[var(--line)] bg-transparent text-black flex items-center justify-center shrink-0 group-hover:bg-black group-hover:text-white transition-colors">
