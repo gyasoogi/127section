@@ -41,18 +41,62 @@ img { pointer-events:none; }
     transform-origin: center; transform: translate(-50%, -50%); overflow: hidden; z-index: 10; 
 }
 
-#target-cursor {
-    position: fixed; left: 0; top: 0; width: 0; height: 0;
-    pointer-events: none; z-index: 999999; mix-blend-mode: difference;
+.target-cursor-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 999999;
+  mix-blend-mode: difference;
+  transform: translate(-50%, -50%);
 }
-.cursor-dot {
-    position: absolute; width: 5px; height: 5px; background: #fff;
-    border-radius: 50%; transform: translate(-50%, -50%);
+
+.target-cursor-dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  background: #fff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  will-change: transform;
 }
-.cursor-box {
-    position: absolute; left: 50%; top: 50%; width: 36px; height: 36px; 
-    border: 2px solid #fff; transform: translate(-50%, -50%) rotate(45deg);
-    transition: transform 0.2s ease-out; 
+
+.target-cursor-corner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  border: 3px solid #fff;
+  will-change: transform;
+}
+
+.corner-tl {
+  transform: translate(-150%, -150%);
+  border-right: none;
+  border-bottom: none;
+}
+
+.corner-tr {
+  transform: translate(50%, -150%);
+  border-left: none;
+  border-bottom: none;
+}
+
+.corner-br {
+  transform: translate(50%, 50%);
+  border-left: none;
+  border-top: none;
+}
+
+.corner-bl {
+  transform: translate(-150%, 50%);
+  border-right: none;
+  border-top: none;
 }
 
 .background-map{
@@ -193,7 +237,13 @@ img { pointer-events:none; }
    SSR CINEMATIC & REVEAL
 ========================================= */
 #single-reveal { position: fixed; inset: 0; z-index: 99999; background-color: #030303; display: flex; justify-content: center; align-items: center; }
-#reveal-content { width: 100%; height: 100%; }
+#reveal-content { 
+    width: 100%; 
+    height: 100%; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+}
 
 .ssr-cinematic { position: relative; width: 100%; height: 100%; overflow: hidden; background: #1c1c1c; }
 .ssr-silhouette, .ssr-image { position: absolute; inset: 0; background-size: cover; background-position: center; background-repeat: no-repeat; }
@@ -223,7 +273,7 @@ img { pointer-events:none; }
 /* 🔥 최적화: 무거운 filter 속성 제거 및 그림자 부하 감소 */
 .masonry-item-wrapper > .masonry-item-img { position: relative; background-size: cover; background-position: center center; width: 100%; height: 100%; border-radius: 12px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.6); }
 
-.tactical-reveal { width: 520px; padding: 60px 40px; margin-left: 330px; background: rgba(10, 10, 10, 0.8); border: 2px solid; clip-path: var(--clip); text-align: center; animation: itemAppear 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
+.tactical-reveal { width: 520px; padding: 60px 40px; background: rgba(10, 10, 10, 0.8); border: 2px solid; clip-path: var(--clip); text-align: center; animation: itemAppear 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
 .tactical-reveal .reveal-icon { font-size: 8rem; margin-bottom: 28px; }
 .tactical-reveal .reveal-name { margin: 0; font-size: 2.2rem; font-weight: 800; font-family:'Orbitron';}
 
@@ -304,8 +354,13 @@ img { pointer-events:none; }
 /* =========================================
    MISCELLANEOUS
 ========================================= */
-#loading-screen { position: fixed; inset: 0; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #050505; transition: 0.8s; }
-.loaded #loading-screen { opacity: 0; visibility: hidden; }
+#loading-screen { 
+    position: fixed; inset: 0; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #050505; 
+    transition: transform 0.8s cubic-bezier(0.76, 0, 0.24, 1); /* 부드러운 가속도 곡선 적용 */
+}
+.loaded #loading-screen { 
+    transform: translateY(100%); 
+}
 .loader { width: 120px; height: 120px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.1); border-top-color: #fff; animation: spin 1s linear infinite; position: relative; }
 .loader::before { content: ''; position: absolute; inset: 16px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.12); }
 .loading-text { margin-top: 28px; font-family: 'Orbitron', sans-serif; letter-spacing: 0.18em; font-size: 0.82rem; animation: pulse 1.4s infinite; color:#fff;}
@@ -320,14 +375,22 @@ img { pointer-events:none; }
 .rate-box { width: 420px; padding: 34px; background: #111; border: 1px solid rgba(255, 255, 255, 0.2); clip-path: var(--clip); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
 .rate-title { margin-top: 0; font-family: 'Orbitron', sans-serif; color:var(--yellow);}
 .rate-section { margin-top:24px; }
-.rate-heading { margin-bottom:12px; font-family:'Orbitron'; letter-spacing:.08em; font-size:.9rem; color:#fff;}
-.rate-line { margin-bottom:2px; font-size:.95rem; line-height:1.7; }
+.rate-heading { margin-bottom:12px; font-family:'Orbitron'; letter-spacing:.08em; font-size:1.2rem; color:#fff;}
+.rate-line { margin-bottom:2px; font-size:1.1rem; line-height:1.7; }
 .ssr-rate { font-family:'Orbitron'; color:var(--color-ssr); }
 .sr-rate { font-family:'Orbitron'; color:var(--color-sr); }
 .r-rate { font-family:'Orbitron'; color:white; }
 
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); }
+
+#tutorial-modal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(7, 7, 7, 0.96); z-index: 10005; display: flex; justify-content: center; align-items: center; opacity: 1; transition: opacity 0.5s ease; }
+#tutorial-modal.hidden { opacity: 0; pointer-events: none; }
+.tutorial-content { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
+.tutorial-img-wrapper { position: relative; width: 100%; height: 100%; }
+#tutorial-img { width: 100%; height: 100%; object-fit: fill; border: none; box-shadow: none; display: block; }
+#close-tutorial { position: absolute; bottom: 45px; right: 45px; background: rgba(7, 7, 7, 0.85); color: #f4f4f4; border: 1px solid rgba(255, 255, 255, 0.2); padding: 12px 35px; font-family: 'Orbitron', 'Rajdhani', sans-serif; font-size: 1.1rem; font-weight: 600; letter-spacing: 2px; cursor: pointer; transition: all 0.3s ease; z-index: 10; backdrop-filter: blur(4px); border-radius: 4px; }
+#close-tutorial:hover { background: #f4f4f4; color: #070707; box-shadow: 0 0 20px #f4f4f4; border-color: #f4f4f4; }
 
 /* =========================================
    BANNER SWIPE ANIMATION

@@ -24,10 +24,11 @@ const itemPool = {
     R: ["BROKEN SHIRT", "OLD FRAME", "COMMON SUIT"]
 };
 
+// [반영 완료] 유진(Clockwork Boy)과 래빈(Pit Boy)의 배너 설명에 새로운 능력을 명시했습니다.
 const banners = [
     {name: "Drone Boy", pickup: "Drone Boy UNIT", image:'img/DRONE-back.png', desc: "도시 잔해 속에서 복구된 누군가의 아바타. 전술 드론 운용과 기동 보조에 특화된 유닛을 획득할 수 있다."},
-    {name: "Clockwork Boy", pickup: "Clockwork Boy UNIT", image:'img/tiger-back.png', desc: "폭발흔이 남은 채 파편화된 누군가의 아바타. 지속 피해에 특화된 유닛을 획득할 수 있다."},
-    {name: "Pit Boy", pickup: "Pit Boy UNIT", image:'img/rabin-back.png', desc: "가늠할 수 없는 좌표계에서 발견된 누군가의 아바타. 근접전에 특화된 유닛을 획득할 수 있다."},
+    {name: "Clockwork Boy", pickup: "Clockwork Boy UNIT", image:'img/tiger-back.png', desc: "폭발흔이 남은 채 파편화된 누군가의 아바타. 광역 지속 피해 및 적 시스템 교란(디버프)에 특화된 유닛을 획득할 수 있다."},
+    {name: "Pit Boy", pickup: "Pit Boy UNIT", image:'img/rabin-back.png', desc: "가늠할 수 없는 좌표계에서 발견된 누군가의 아바타. 초근접 타격 및 조건부 쿨타임 단축(버서커)에 특화된 유닛을 획득할 수 있다."},
     {name: "Water Man", pickup: "Water Man UNIT", image:'img/god-back.png', desc: "침수된 음성 모듈에서 추출된 누군가의 아바타. 구호에 특화된 유닛을 획득할 수 있다."},
     {name: "Silent Sniper", pickup: "Silent Sniper UNIT", image:'img/lead-back.png', desc: " 관통된 물리 코어 내부에서 확인된 누군가의 아바타. 원거리 강공격에 특화된 유닛을 획득할 수 있다."},
     {name: "Podium Man", pickup: "Podium Man UNIT", image:'img/bigbear-back.png', desc: "단상에 새겨진 채 발견된 누군가의 아바타. 적의 시선을 끄는 데에 특화된 유닛을 획득할 수 있다."},
@@ -80,6 +81,7 @@ const DOM = {};
 window.addEventListener('load', () => {
     // 렌더링 파이프라인 지연 방지를 위한 requestAnimationFrame 사용
     requestAnimationFrame(() => document.body.classList.add('loaded'));
+    
 });
 
 function init() {
@@ -115,6 +117,7 @@ function init() {
     switchBanner(0);
     updatePity();
     animateHUD();
+    initTutorial();
 }
 
 function switchBanner(i) {
@@ -254,12 +257,6 @@ function renderInventory() {
 }
 
 function toggleRate(show) { document.getElementById('rate-popup').style.display = show ? 'flex' : 'none'; }
-function toggleDebugPickup() {
-    debugPickupMode = !debugPickupMode;
-    const btn = document.getElementById('debug-pickup-btn');
-    btn.classList.toggle('active', debugPickupMode);
-    btn.querySelector('.command-sub').innerText = debugPickupMode ? 'PICKUP : ON' : 'PICKUP : OFF';
-}
 
 /* ==========================================================================
    5. GACHA CORE ANIMATION LOGIC & REVEAL FLOW CONTROL
@@ -463,12 +460,10 @@ function renderReveal() {
 
     const color = item.rarity === "SR" ? "var(--color-sr)" : "var(--color-r)";
     DOM.revealContent.innerHTML = `
-        <div style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; z-index: 100; pointer-events: none;">
-            <div class="reveal-box tactical-reveal" style="border-color:${color}; pointer-events: auto;">
-                <div class="reveal-subtitle">SYNTHETIC RESULT</div>
-                <i class="fa-solid ${iconMap[item.name] || 'fa-cube'} reveal-icon" style="color:${color};"></i>
-                <h1 class="reveal-name" style="color:${color}">${item.name}</h1>
-            </div>
+        <div class="reveal-box tactical-reveal" style="border-color:${color}; pointer-events: auto;">
+            <div class="reveal-subtitle">SYNTHETIC RESULT</div>
+            <i class="fa-solid ${iconMap[item.name] || 'fa-cube'} reveal-icon" style="color:${color};"></i>
+            <h1 class="reveal-name" style="color:${color}">${item.name}</h1>
         </div>
     `;
 }
@@ -647,31 +642,288 @@ function autoScaleUI() {
 }
 
 function initTargetCursor() {
-    const cursor = document.getElementById('target-cursor');
-    if (!cursor) return;
-    const box = cursor.querySelector('.cursor-box');
+  const config = {
+    targetSelector: '.cursor-target, button, select, .grid-item', // 타겟팅할 요소들 확장
+    spinDuration: 2,
+    hideDefaultCursor: true,
+    hoverDuration: 0.2,
+    parallaxOn: true,
+    borderWidth: 3,
+    cornerSize: 12
+  };
 
-    // [최적화] requestAnimationFrame을 사용한 커서 이동 (Jank 방지)
-    let mouseX = 0, mouseY = 0;
-    let isMoving = false;
+  const isMobile = (() => {
+    const hasTouchScreen = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const isSmallScreen = window.innerWidth <= 768;
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    const mobileRegex = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i;
+    const isMobileUserAgent = mobileRegex.test(userAgent.toLowerCase());
+    return (hasTouchScreen && isSmallScreen) || isMobileUserAgent;
+  })();
 
-    window.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX; mouseY = e.clientY;
-        if (!isMoving) {
-            isMoving = true;
-            requestAnimationFrame(() => {
-                cursor.style.left = mouseX + 'px';
-                cursor.style.top = mouseY + 'px';
-                isMoving = false;
-            });
+  const cursor = document.getElementById('target-cursor');
+  if (isMobile) {
+    if (cursor) cursor.remove();
+    document.body.style.cursor = 'auto';
+    return;
+  }
+
+  if (!cursor) return;
+
+  const dot = cursor.querySelector('.target-cursor-dot');
+  const corners = Array.from(cursor.querySelectorAll('.target-cursor-corner'));
+
+  let spinTl = null;
+  let containingBlock = null;
+  let activeTarget = null;
+  let currentLeaveHandler = null;
+  let resumeTimeout = null;
+  let targetCornerPositions = null;
+  let isActive = false;
+  let activeStrength = { current: 0 };
+
+  const getContainingBlock = element => {
+    let node = element?.parentElement;
+    while (node && node !== document.documentElement) {
+      const style = getComputedStyle(node);
+      if (
+        style.transform !== 'none' ||
+        style.perspective !== 'none' ||
+        style.filter !== 'none' ||
+        style.willChange.includes('transform') ||
+        style.willChange.includes('perspective') ||
+        style.willChange.includes('filter') ||
+        /paint|layout|strict|content/.test(style.contain)
+      ) {
+        return node;
+      }
+      node = node.parentElement;
+    }
+    return null;
+  };
+
+  const getContainingBlockOffset = block => {
+    if (!block) return { x: 0, y: 0 };
+    const rect = block.getBoundingClientRect();
+    return { x: rect.left + block.clientLeft, y: rect.top + block.clientTop };
+  };
+
+  const moveCursor = (x, y) => {
+    const { x: offsetX, y: offsetY } = getContainingBlockOffset(containingBlock);
+    gsap.to(cursor, {
+      x: x - offsetX,
+      y: y - offsetY,
+      duration: 0.1,
+      ease: 'power3.out'
+    });
+  };
+
+  containingBlock = getContainingBlock(cursor);
+  const initialOffset = getContainingBlockOffset(containingBlock);
+  
+  gsap.set(cursor, {
+    xPercent: -50,
+    yPercent: -50,
+    x: window.innerWidth / 2 - initialOffset.x,
+    y: window.innerHeight / 2 - initialOffset.y
+  });
+
+  const createSpinTimeline = () => {
+    if (spinTl) spinTl.kill();
+    spinTl = gsap.timeline({ repeat: -1 })
+      .to(cursor, { rotation: '+=360', duration: config.spinDuration, ease: 'none' });
+  };
+
+  createSpinTimeline();
+
+  const tickerFn = () => {
+    if (!targetCornerPositions || !isActive) return;
+
+    const strength = activeStrength.current;
+    if (strength === 0) return;
+
+    const cursorX = gsap.getProperty(cursor, 'x');
+    const cursorY = gsap.getProperty(cursor, 'y');
+
+    corners.forEach((corner, i) => {
+      const currentX = gsap.getProperty(corner, 'x');
+      const currentY = gsap.getProperty(corner, 'y');
+
+      const targetX = targetCornerPositions[i].x - cursorX;
+      const targetY = targetCornerPositions[i].y - cursorY;
+
+      const finalX = currentX + (targetX - currentX) * strength;
+      const finalY = currentY + (targetY - currentY) * strength;
+
+      const duration = strength >= 0.99 ? (config.parallaxOn ? 0.2 : 0) : 0.05;
+
+      gsap.to(corner, {
+        x: finalX,
+        y: finalY,
+        duration: duration,
+        ease: duration === 0 ? 'none' : 'power1.out',
+        overwrite: 'auto'
+      });
+    });
+  };
+
+  const moveHandler = e => moveCursor(e.clientX, e.clientY);
+  
+  const scrollHandler = () => {
+    if (!activeTarget) return;
+    const { x: offsetX, y: offsetY } = getContainingBlockOffset(containingBlock);
+    const mouseX = gsap.getProperty(cursor, 'x') + offsetX;
+    const mouseY = gsap.getProperty(cursor, 'y') + offsetY;
+    const elementUnderMouse = document.elementFromPoint(mouseX, mouseY);
+    const isStillOverTarget =
+      elementUnderMouse &&
+      (elementUnderMouse === activeTarget || elementUnderMouse.closest(config.targetSelector) === activeTarget);
+    if (!isStillOverTarget && currentLeaveHandler) {
+      currentLeaveHandler();
+    }
+  };
+
+  const mouseDownHandler = () => {
+    gsap.to(dot, { scale: 0.7, duration: 0.3 });
+    gsap.to(cursor, { scale: 0.9, duration: 0.2 });
+  };
+
+  const mouseUpHandler = () => {
+    gsap.to(dot, { scale: 1, duration: 0.3 });
+    gsap.to(cursor, { scale: 1, duration: 0.2 });
+  };
+
+  const cleanupTarget = target => {
+    if (currentLeaveHandler) {
+      target.removeEventListener('mouseleave', currentLeaveHandler);
+    }
+    currentLeaveHandler = null;
+  };
+
+  const enterHandler = e => {
+    const directTarget = e.target;
+    let current = directTarget;
+    let target = null;
+    
+    while (current && current !== document.body) {
+      if (current.matches(config.targetSelector)) {
+        target = current;
+        break;
+      }
+      current = current.parentElement;
+    }
+
+    if (!target) return;
+    if (activeTarget === target) return;
+    
+    if (activeTarget) cleanupTarget(activeTarget);
+    if (resumeTimeout) {
+      clearTimeout(resumeTimeout);
+      resumeTimeout = null;
+    }
+
+    activeTarget = target;
+    corners.forEach(corner => gsap.killTweensOf(corner));
+
+    gsap.killTweensOf(cursor, 'rotation');
+    if (spinTl) spinTl.pause();
+    gsap.set(cursor, { rotation: 0 });
+
+    const rect = target.getBoundingClientRect();
+    const { borderWidth, cornerSize } = config;
+    const { x: offsetX, y: offsetY } = getContainingBlockOffset(containingBlock);
+    const cursorX = gsap.getProperty(cursor, 'x');
+    const cursorY = gsap.getProperty(cursor, 'y');
+
+    targetCornerPositions = [
+      { x: rect.left - borderWidth - offsetX, y: rect.top - borderWidth - offsetY },
+      { x: rect.right + borderWidth - cornerSize - offsetX, y: rect.top - borderWidth - offsetY },
+      { x: rect.right + borderWidth - cornerSize - offsetX, y: rect.bottom + borderWidth - cornerSize - offsetY },
+      { x: rect.left - borderWidth - offsetX, y: rect.bottom + borderWidth - cornerSize - offsetY }
+    ];
+
+    isActive = true;
+    gsap.ticker.add(tickerFn);
+
+    gsap.to(activeStrength, {
+      current: 1,
+      duration: config.hoverDuration,
+      ease: 'power2.out'
+    });
+
+    corners.forEach((corner, i) => {
+      gsap.to(corner, {
+        x: targetCornerPositions[i].x - cursorX,
+        y: targetCornerPositions[i].y - cursorY,
+        duration: 0.2,
+        ease: 'power2.out'
+      });
+    });
+
+    const leaveHandler = () => {
+      gsap.ticker.remove(tickerFn);
+      isActive = false;
+      targetCornerPositions = null;
+      gsap.set(activeStrength, { current: 0, overwrite: true });
+      activeTarget = null;
+
+      gsap.killTweensOf(corners);
+      const { cornerSize } = config;
+      const positions = [
+        { x: -cornerSize * 1.5, y: -cornerSize * 1.5 },
+        { x: cornerSize * 0.5, y: -cornerSize * 1.5 },
+        { x: cornerSize * 0.5, y: cornerSize * 0.5 },
+        { x: -cornerSize * 1.5, y: cornerSize * 0.5 }
+      ];
+      
+      const tl = gsap.timeline();
+      corners.forEach((corner, index) => {
+        tl.to(corner, {
+          x: positions[index].x,
+          y: positions[index].y,
+          duration: 0.3,
+          ease: 'power3.out'
+        }, 0);
+      });
+
+      resumeTimeout = setTimeout(() => {
+        if (!activeTarget && spinTl) {
+          const currentRotation = gsap.getProperty(cursor, 'rotation');
+          const normalizedRotation = currentRotation % 360;
+          spinTl.kill();
+          spinTl = gsap.timeline({ repeat: -1 })
+            .to(cursor, { rotation: '+=360', duration: config.spinDuration, ease: 'none' });
+            
+          gsap.to(cursor, {
+            rotation: normalizedRotation + 360,
+            duration: config.spinDuration * (1 - normalizedRotation / 360),
+            ease: 'none',
+            onComplete: () => {
+              if(spinTl) spinTl.restart();
+            }
+          });
         }
-    });
+        resumeTimeout = null;
+      }, 50);
 
-    // 동적 생성 요소에 대응하기 위해 DOM 구조에 직접 걸지 않고 마우스오버 이벤트 위임 방식 검토 권장
-    document.querySelectorAll('button, select, .clickable, .grid-item').forEach(el => {
-        el.addEventListener('mouseenter', () => box.style.transform = 'translate(-50%, -50%) rotate(0deg) scale(1.5)');
-        el.addEventListener('mouseleave', () => box.style.transform = 'translate(-50%, -50%) rotate(45deg) scale(1)');
-    });
+      cleanupTarget(target);
+    };
+
+    currentLeaveHandler = leaveHandler;
+    target.addEventListener('mouseleave', leaveHandler);
+  };
+
+  const resizeHandler = () => {
+    containingBlock = getContainingBlock(cursor);
+  };
+
+  window.addEventListener('mousemove', moveHandler);
+  // 이벤트 위임을 사용하여 동적으로 생성되는 요소(인벤토리 등)에도 작동하도록 설정
+  document.body.addEventListener('mouseover', enterHandler, { passive: true });
+  window.addEventListener('scroll', scrollHandler, { passive: true });
+  window.addEventListener('resize', resizeHandler);
+  window.addEventListener('mousedown', mouseDownHandler);
+  window.addEventListener('mouseup', mouseUpHandler);
 }
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -685,4 +937,96 @@ window.addEventListener('DOMContentLoaded', () => {
     if (ssrPreview) ssrPreview.addEventListener('click', () => toggleSSRPreview(false));
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+    const backBtn = document.querySelector('.btn-back-main');
+    
+    if (backBtn) {
+        backBtn.addEventListener('click', (e) => {
+            e.preventDefault(); // 기본 링크 이동 방지
+            const targetUrl = backBtn.getAttribute('href');
+
+            // 1. 전환용 검은 화면 엘리먼트 생성
+            const transitionScreen = document.createElement('div');
+            transitionScreen.style.position = 'fixed';
+            transitionScreen.style.top = '100%'; /* 화면 아래에 대기 */
+            transitionScreen.style.left = '0';
+            transitionScreen.style.width = '100vw';
+            transitionScreen.style.height = '100vh';
+            transitionScreen.style.backgroundColor = '#000';
+            transitionScreen.style.zIndex = '999999';
+            transitionScreen.style.transition = 'top 0.7s cubic-bezier(0.76, 0, 0.24, 1)';
+            
+            document.body.appendChild(transitionScreen);
+
+            // 2. 렌더링 사이클 대기 후 애니메이션 실행 (아래에서 위로)
+            requestAnimationFrame(() => {
+                transitionScreen.style.top = '0';
+            });
+
+            // 3. 애니메이션이 완전히 끝난 후 페이지 이동
+            setTimeout(() => {
+                window.location.href = targetUrl;
+            }, 700); // transition 시간과 동일하게 설정
+        });
+    }
+});
+
 init();
+
+// [기능] 처음에만 뜨는 2장짜리 화면 가득한 튜토리얼 시스템
+function initTutorial() {
+  const tutorialModal = document.getElementById('tutorial-modal');
+  const tutorialImg = document.getElementById('tutorial-img');
+  const closeBtn = document.getElementById('close-tutorial');
+  
+  if (!tutorialModal || !tutorialImg || !closeBtn) return;
+
+  // 사용할 이미지 파일명 배열 (경로에 맞게 수정하여 사용)
+  const tutorialImages = ['tutorial_guide.png'];
+  let currentStep = 0;
+
+  // 로컬 스토리지를 확인하여 이미 본 이력이 있다면 모달을 켜지 않고 종료
+  const hasSeenTutorial = localStorage.getItem('tutorialSeen');
+  if (hasSeenTutorial) {
+    tutorialModal.classList.add('hidden');
+    return;
+  }
+
+  // 처음 들어온 유저에게만 모달 노출 및 첫 이미지 설정
+  tutorialModal.classList.remove('hidden');
+  tutorialImg.src = tutorialImages[currentStep];
+  closeBtn.textContent = "NEXT";
+
+  closeBtn.addEventListener('click', () => {
+    // 다음 장의 이미지가 더 남아있는 경우
+    if (currentStep < tutorialImages.length - 1) {
+      currentStep++;
+      tutorialImg.src = tutorialImages[currentStep];
+      
+      // 마지막 장에 도달했을 때 버튼 텍스트 변경
+      if (currentStep === tutorialImages.length - 1) {
+        closeBtn.textContent = "SYSTEM START";
+      }
+    } else {
+      // 모든 이미지를 다 본 상태에서 클릭 시 (종료 연출)
+      if (typeof gsap !== 'undefined') {
+        // 프로젝트에 GSAP 라이브러리가 로드되어 있을 때 부드럽게 페이드아웃
+        gsap.to(tutorialModal, {
+          opacity: 0,
+          duration: 0.6,
+          ease: "power2.out",
+          onComplete: () => {
+            tutorialModal.classList.add('hidden');
+            localStorage.setItem('tutorialSeen', 'true'); // 스토리지에 기록 저장
+          }
+        });
+      } else {
+        // GSAP이 없는 일반 프로젝트일 경우 즉시 즉각 종료 처리
+        tutorialModal.classList.add('hidden');
+        localStorage.setItem('tutorialSeen', 'true');
+      }
+    }
+  });
+}
+
+initTutorial();

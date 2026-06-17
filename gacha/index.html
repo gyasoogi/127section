@@ -35,12 +35,25 @@
     </style>
 </head>
 <body>
-    <div id="target-cursor" aria-hidden="true">
-        <div class="cursor-dot"></div>
-        <div class="cursor-box"></div>
-    </div>
+<div id="target-cursor" class="target-cursor-wrapper" aria-hidden="true">
+    <div class="target-cursor-dot"></div>
+    <div class="target-cursor-corner corner-tl"></div>
+    <div class="target-cursor-corner corner-tr"></div>
+    <div class="target-cursor-corner corner-br"></div>
+    <div class="target-cursor-corner corner-bl"></div>
+</div>
 
 <div id="ui-scale-wrapper">
+
+<div id="tutorial-modal" class="hidden">
+  <div class="tutorial-content">
+    <div class="tutorial-img-wrapper">
+      <img src="" alt="TUTORIAL GUIDE" id="tutorial-img" />
+      <button id="close-tutorial">NEXT</button>
+    </div>
+  </div>
+</div>
+
     <div class="background-map" aria-hidden="true"></div>
     <div class="map-noise" aria-hidden="true"></div>
     <div class="vignette" aria-hidden="true"></div>
@@ -124,10 +137,8 @@
         <aside class="right-panel bottom-ui">
             <div class="panel-title" style="margin-bottom: 20px;">COMMAND</div>
             <div class="command-grid">
-                <button id="debug-pickup-btn" class="command-card ui-btn debug-btn cursor-target" onclick="toggleDebugPickup(); event.stopPropagation();">
-                    <span class="command-main">DEBUG</span>
-                    <span class="command-sub">PICKUP : OFF</span>
-                </button>
+                <div class="command-card" style="opacity: 0; pointer-events: none; visibility: hidden;"></div>
+
                 <button class="command-card ui-btn cursor-target" onclick="toggleRate(true); event.stopPropagation();">
                     <span class="command-main">RATE</span>
                     <span class="command-sub">PROBABILITY INFO</span>
@@ -185,6 +196,8 @@
             <div class="rate-line ssr-rate">SSR: 1%</div>
             <div class="rate-line sr-rate">SR: 13%</div>
             <div class="rate-line r-rate">R: 86%</div>
+            <div class="rate-heading" style="font-size: 0.9rem; margin-top: 10px;">
+                소환된 SSR 유닛은 50%확률로 픽업 유닛입니다. 이번에 획득한 SSR이 픽업 유닛이 아닐 경우, 다음 차례에는 확정적으로 픽업 SSR을 얻게 됩니다.</div>
         </div>
     </div>
 </div>

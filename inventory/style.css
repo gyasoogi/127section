@@ -1,0 +1,144 @@
+.grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+    linear-gradient(to right, rgba(0,0,0,0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0,0,0,0.03) 1px, transparent 1px);
+    background-size: 80px 80px;
+    z-index: -2;
+}
+
+.scan-lines {
+    position: absolute;
+    inset: 0;
+    opacity: .08;
+    background-image:
+    repeating-linear-gradient(
+        0deg,
+        rgba(0,0,0,.2) 0px,
+        rgba(0,0,0,.2) 1px,
+        transparent 1px,
+        transparent 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+}
+
+#ui-scale-wrapper {
+    position: absolute;
+    width: 1350px;
+    height: 800px;
+    top: 50%;
+    left: 50%;
+    transform-origin: center center;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.fade-content {
+    transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
+}
+.fade-out {
+    opacity: 0;
+    transform: translateY(5px);
+}
+
+/* 이미지 마스크 & 글리치 효과 */
+.image-mask {
+    clip-path: polygon(10% 0%, 90% 0%, 100% 10%, 100% 90%, 90% 100%, 10% 100%, 0% 90%, 0% 10%);
+}
+
+.image-glitch {
+    position: absolute;
+    inset: 0;
+    background:
+    repeating-linear-gradient(
+        180deg,
+        transparent 0px,
+        transparent 5px,
+        rgba(255,255,255,.3) 6px
+    );
+    mix-blend-mode: screen;
+    pointer-events: none;
+}
+
+/* 타겟 박스 프레임 */
+.target-box::before,
+.target-box::after {
+    content: "";
+    position: absolute;
+    width: 36px;
+    height: 36px;
+    border: 3px solid var(--text);
+    z-index: 10;
+}
+.target-box::before {
+    top: -2px; left: -2px;
+    border-right: none; border-bottom: none;
+}
+.target-box::after {
+    bottom: -2px; right: -2px;
+    border-left: none; border-top: none;
+}
+
+.measure-line {
+    position: absolute;
+    width: 1px;
+    background: linear-gradient(to bottom, #000 0%, rgba(0,0,0,.1) 100%);
+}
+
+.vertical-text {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    letter-spacing: 5px;
+}
+
+.btn-back-main {
+    position: fixed;
+    left: 25px;
+    bottom: 40px;
+    z-index: 9999;
+    font-size: 0.9rem;
+    letter-spacing: 4px;
+    font-weight: 400;
+    color: #3a3a3a;
+    text-decoration: none;
+    display: inline-block;
+    white-space: pre-line;
+    text-align: center;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+.btn-back-main:hover {
+    transform: scale(1.1);
+    color: #3a3a3a;
+}
+
+/* =========================================
+   DIAGONAL WIPE TRANSITION
+========================================= */
+.page-transition-overlay {
+  position: fixed;
+  top: -100%;
+  left: -100%;
+  width: 300%;
+  height: 300%;
+  background-color: #111;
+  z-index: 99999;
+  pointer-events: none;
+  transform-origin: center;
+  
+  transform: rotate(-45deg) translateX(0%);
+  transition: transform 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.page-transition-overlay::after {
+  content: "";
+  position: absolute;
+  top: 0; bottom: 0; left: 0;
+  width: 3px;
+  background: #fff;
+  box-shadow: 0 0 20px 5px rgba(255, 255, 255, 0.4);
+}
+
+.page-transition-overlay.revealed {
+  transform: rotate(-45deg) translateX(100%);
+}
