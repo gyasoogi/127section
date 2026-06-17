@@ -66,6 +66,7 @@ let totalPull = parseInt(localStorage.getItem('gachaTotalPull')) || 0;
 const maxPullsAllowed = parseInt(localStorage.getItem('gachaMaxPulls')) || 350;
 
 let pitySSR = 0, pitySR = 0, pityPickup = 0;
+let guaranteedPickup = JSON.parse(localStorage.getItem('gachaGuaranteed')) || false; // 반천장 실패 기록
 let state = STATE.IDLE;
 let isIntroPlaying = false;
 let introTimeout = null;
@@ -176,12 +177,18 @@ function runGacha(count) {
 
         if (debugPickupMode || r < 1 || pitySSR >= 80) {
             rarity = "SSR"; pitySSR = 0;
-            if (debugPickupMode || Math.random() < 0.5 || pityPickup >= 150) {
-                name = current.pickup; pityPickup = 0;
+
+            if (debugPickupMode || guaranteedPickup || Math.random() < 0.5 || pityPickup >= 150) {
+                name = current.pickup; 
+                pityPickup = 0;
+                guaranteedPickup = false;
             } else {
                 const nonPickupSSR = itemPool.SSR.filter(ssr => ssr !== current.pickup);
                 name = nonPickupSSR[Math.floor(Math.random() * nonPickupSSR.length)];
+                guaranteedPickup = true;
             }
+            localStorage.setItem('gachaGuaranteed', JSON.stringify(guaranteedPickup));
+            
         } else if (r < 14 || pitySR >= 10) {
             rarity = "SR"; pitySR = 0;
             name = itemPool.SR[Math.floor(Math.random() * itemPool.SR.length)];
