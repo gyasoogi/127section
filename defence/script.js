@@ -58,7 +58,6 @@ const gameStats = savedStats || {
   ssr: 0, sr: 0, r: 0,
   totalSSR: 0, totalSR: 0, totalR: 0
 };
-const gameStats = savedStats || { protocolsExecuted: 0, alliesDestroyed: 0, enemiesDestroyed: 0, creditsUsed: 0, ssr: 0, sr: 0, r: 0 };
 const savedCleared = JSON.parse(localStorage.getItem('tacticalCleared'));
 const clearedDiffs = savedCleared || { easy: false, normal: false, hard: false };
 
