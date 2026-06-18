@@ -49,17 +49,35 @@ function releaseEntityToPool(el) {
   entityPool.push(el);
 }
 
-let inventory = JSON.parse(localStorage.getItem('gachaInventory')) || {};
-const savedConfig = JSON.parse(localStorage.getItem('tacticalConfig'));
-const configState = savedConfig || { difficulty: 'easy', tokens: 1200, upgrades: { capital: 1, fortify: 1, weapon: 1 } };
-const savedStats = JSON.parse(localStorage.getItem('tacticalStats'));
-const gameStats = savedStats || { 
+// =========================================
+// [DATA MERGING & FIX] NaN 오류 해결 적용
+// =========================================
+const defaultStats = { 
   protocolsExecuted: 0, alliesDestroyed: 0, enemiesDestroyed: 0, creditsUsed: 0, 
   ssr: 0, sr: 0, r: 0,
   totalSSR: 0, totalSR: 0, totalR: 0
 };
-const savedCleared = JSON.parse(localStorage.getItem('tacticalCleared'));
-const clearedDiffs = savedCleared || { easy: false, normal: false, hard: false };
+const defaultConfig = { 
+  difficulty: 'easy', tokens: 1200, 
+  upgrades: { capital: 1, fortify: 1, weapon: 1 } 
+};
+const defaultCleared = { easy: false, normal: false, hard: false };
+
+let inventory = JSON.parse(localStorage.getItem('gachaInventory')) || {};
+
+const savedStats = JSON.parse(localStorage.getItem('tacticalStats')) || {};
+const gameStats = { ...defaultStats, ...savedStats };
+
+const savedCleared = JSON.parse(localStorage.getItem('tacticalCleared')) || {};
+const clearedDiffs = { ...defaultCleared, ...savedCleared };
+
+const savedConfig = JSON.parse(localStorage.getItem('tacticalConfig')) || {};
+const configState = { 
+  ...defaultConfig, 
+  ...savedConfig,
+  upgrades: { ...defaultConfig.upgrades, ...(savedConfig.upgrades || {}) }
+};
+// =========================================
 
 function saveData() {
   localStorage.setItem('gachaInventory', JSON.stringify(inventory));
@@ -139,11 +157,6 @@ function initUICache() {
 /* LOBBY CONTROL */
 function selectDifficulty(diff) {
   configState.difficulty = diff;
-  if (diff === 'easy') configState.tokens = 1200;
-  else if (diff === 'normal') configState.tokens = 600;
-  else if (diff === 'hard') configState.tokens = 200;
-
-  configState.upgrades = { capital: 1, fortify: 1, weapon: 1 };
 
   document.querySelectorAll('.tactical-node-card').forEach(node => node.classList.remove('active'));
   const selectedNode = document.getElementById(`node-${diff}`);
@@ -370,9 +383,9 @@ function engageSystem() {
           gameState.loopId = requestAnimationFrame(gameLoop);
 
           setTimeout(() => {
-             transitionOverlay.style.transition = 'none'; transitionOverlay.classList.remove('exit'); void transitionOverlay.offsetWidth; 
-             transitionOverlay.style.transition = 'top 0.5s cubic-bezier(0.77, 0, 0.175, 1)';
-             isStartingGame = false; 
+              transitionOverlay.style.transition = 'none'; transitionOverlay.classList.remove('exit'); void transitionOverlay.offsetWidth; 
+              transitionOverlay.style.transition = 'top 0.5s cubic-bezier(0.77, 0, 0.175, 1)';
+              isStartingGame = false; 
           }, 500);
         }, 2500);
       }
