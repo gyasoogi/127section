@@ -53,6 +53,11 @@ let inventory = JSON.parse(localStorage.getItem('gachaInventory')) || {};
 const savedConfig = JSON.parse(localStorage.getItem('tacticalConfig'));
 const configState = savedConfig || { difficulty: 'easy', tokens: 1200, upgrades: { capital: 1, fortify: 1, weapon: 1 } };
 const savedStats = JSON.parse(localStorage.getItem('tacticalStats'));
+const gameStats = savedStats || { 
+  protocolsExecuted: 0, alliesDestroyed: 0, enemiesDestroyed: 0, creditsUsed: 0, 
+  ssr: 0, sr: 0, r: 0,
+  totalSSR: 0, totalSR: 0, totalR: 0
+};
 const gameStats = savedStats || { protocolsExecuted: 0, alliesDestroyed: 0, enemiesDestroyed: 0, creditsUsed: 0, ssr: 0, sr: 0, r: 0 };
 const savedCleared = JSON.parse(localStorage.getItem('tacticalCleared'));
 const clearedDiffs = savedCleared || { easy: false, normal: false, hard: false };
@@ -754,7 +759,8 @@ function showEndingCredits() {
   document.getElementById('cs-ally').innerText = gameStats.alliesDestroyed + '기';
   document.getElementById('cs-enemy').innerText = gameStats.enemiesDestroyed + '기';
   document.getElementById('cs-cred').innerText = '$' + gameStats.creditsUsed;
-  document.getElementById('cs-units').innerText = `SSR ${gameStats.ssr} / SR ${gameStats.sr} / R ${gameStats.r}`;
+  
+  document.getElementById('cs-units').innerText = `SSR ${gameStats.totalSSR || 0} / SR ${gameStats.totalSR || 0} / R ${gameStats.totalR || 0}`;
   
   document.getElementById('end-overlay').style.display = 'none';
   document.getElementById('ending-credits-overlay').style.display = 'flex';

@@ -150,6 +150,9 @@ function updatePity() {
 /* ==========================================================================
    4. GACHA & INVENTORY LOGIC
    ========================================================================== */
+/* ==========================================================================
+   4. GACHA & INVENTORY LOGIC
+   ========================================================================== */
 function runGacha(count) {
     if (state !== STATE.IDLE) return;
 
@@ -166,6 +169,12 @@ function runGacha(count) {
     totalPull += count;
     DOM.totalCount.innerText = Math.max(0, maxPullsAllowed - totalPull);
     localStorage.setItem('gachaTotalPull', totalPull);
+
+    // [추가된 로직] 1. 전투/엔딩씬에서 사용할 누적 통계 데이터를 불러옵니다.
+    let tacticalStats = JSON.parse(localStorage.getItem('tacticalStats')) || {};
+    tacticalStats.totalSSR = tacticalStats.totalSSR || 0;
+    tacticalStats.totalSR = tacticalStats.totalSR || 0;
+    tacticalStats.totalR = tacticalStats.totalR || 0;
 
     let highest = "R";
     const current = banners[currentBanner];
@@ -201,12 +210,16 @@ function runGacha(count) {
 
         results.push({ rarity, name, image: current.image });
         
-        // 인벤토리 즉시 추가 로직
         if (inventory[name]) inventory[name].count++;
         else inventory[name] = { rarity, count: 1, image: current.image };
+
+        if (rarity === "SSR") tacticalStats.totalSSR++;
+        else if (rarity === "SR") tacticalStats.totalSR++;
+        else if (rarity === "R") tacticalStats.totalR++;
     }
     
     localStorage.setItem('gachaInventory', JSON.stringify(inventory));
+    localStorage.setItem('tacticalStats', JSON.stringify(tacticalStats));
 
     updatePity();
     playAnimation(highest);
