@@ -65,8 +65,12 @@ let inventory = JSON.parse(localStorage.getItem('gachaInventory')) || {};
 let totalPull = parseInt(localStorage.getItem('gachaTotalPull')) || 0;
 const maxPullsAllowed = parseInt(localStorage.getItem('gachaMaxPulls')) || 350;
 
-let pitySSR = 0, pitySR = 0, pityPickup = 0;
+// [개선] 천장 카운트 로컬 스토리지 연동
+let pitySSR = parseInt(localStorage.getItem('gachaPitySSR')) || 0;
+let pitySR = parseInt(localStorage.getItem('gachaPitySR')) || 0;
+let pityPickup = parseInt(localStorage.getItem('gachaPityPickup')) || 0;
 let guaranteedPickup = JSON.parse(localStorage.getItem('gachaGuaranteed')) || false; // 반천장 실패 기록
+
 let state = STATE.IDLE;
 let isIntroPlaying = false;
 let introTimeout = null;
@@ -82,7 +86,6 @@ const DOM = {};
 window.addEventListener('load', () => {
     // 렌더링 파이프라인 지연 방지를 위한 requestAnimationFrame 사용
     requestAnimationFrame(() => document.body.classList.add('loaded'));
-    
 });
 
 function init() {
@@ -147,9 +150,6 @@ function updatePity() {
     DOM.pityPickup.innerHTML = `<span>PICKUP PITY</span><b>${150 - pityPickup}</b>`;
 }
 
-/* ==========================================================================
-   4. GACHA & INVENTORY LOGIC
-   ========================================================================== */
 /* ==========================================================================
    4. GACHA & INVENTORY LOGIC
    ========================================================================== */
@@ -220,6 +220,11 @@ function runGacha(count) {
     
     localStorage.setItem('gachaInventory', JSON.stringify(inventory));
     localStorage.setItem('tacticalStats', JSON.stringify(tacticalStats));
+
+    // [개선] 갱신된 천장 카운트를 로컬 스토리지에 저장
+    localStorage.setItem('gachaPitySSR', pitySSR);
+    localStorage.setItem('gachaPitySR', pitySR);
+    localStorage.setItem('gachaPityPickup', pityPickup);
 
     updatePity();
     playAnimation(highest);

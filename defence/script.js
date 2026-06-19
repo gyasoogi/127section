@@ -178,10 +178,11 @@ function updateIntelBriefing(diff) {
   threatEl.className = "brief-threat-badge " + data.badgeClass;
   document.getElementById('intel-desc').innerText = data.desc;
   const dynamicBg = document.getElementById('dynamic-bg');
-  dynamicBg.style.backgroundImage = `radial-gradient(circle at center, rgba(255,255,255,.03), transparent 60%), url('${data.bgImage}')`;
+  if (dynamicBg) dynamicBg.style.backgroundImage = `radial-gradient(circle at center, rgba(255,255,255,.03), transparent 60%), url('${data.bgImage}')`;
 }
 
-document.querySelector('.tactical-world-grid').addEventListener('mouseleave', () => { updateIntelBriefing(configState.difficulty); });
+const worldGrid = document.querySelector('.tactical-world-grid');
+if (worldGrid) worldGrid.addEventListener('mouseleave', () => { updateIntelBriefing(configState.difficulty); });
 
 function getUpgradeRequirement(currentLevel) {
   const tokenCost = Math.min(500, 200 + (currentLevel - 1) * 150);
@@ -258,7 +259,9 @@ function completeUpgrade(type, req) {
 }
 
 function updateLobbyUI() {
-  document.getElementById('lobby-tokens').innerText = `${configState.tokens} PT`;
+  const lobbyTokens = document.getElementById('lobby-tokens');
+  if (lobbyTokens) lobbyTokens.innerText = `${configState.tokens} PT`;
+  
   const statsMapping = {
     capital: { el: 'lvl-txt-capital', text: '시작 자원', mult: 150 },
     fortify: { el: 'lvl-txt-fortify', text: '코어 체력', mult: 300 },
@@ -268,7 +271,9 @@ function updateLobbyUI() {
   ['capital', 'fortify', 'weapon'].forEach(type => {
     const lvl = configState.upgrades[type];
     const statInfo = statsMapping[type];
-    document.getElementById(statInfo.el).innerText = `현재: Lv.${lvl} (+ ${(lvl-1)*statInfo.mult}${statInfo.text})`;
+    const lvlTextEl = document.getElementById(statInfo.el);
+    if (lvlTextEl) lvlTextEl.innerText = `현재: Lv.${lvl} (+ ${(lvl-1)*statInfo.mult}${statInfo.text})`;
+    
     const req = getUpgradeRequirement(lvl);
     const btn = document.getElementById(`btn-pre-${type}`);
     if (btn) {
@@ -360,31 +365,37 @@ function engageSystem() {
   const transitionOverlay = document.getElementById('screen-transition');
   const typeTarget = document.getElementById('transition-typing-text');
   
-  transitionOverlay.classList.remove('exit'); transitionOverlay.classList.add('active'); 
-  typeTarget.style.display = 'block'; typeTarget.innerText = '';
+  if(transitionOverlay) { transitionOverlay.classList.remove('exit'); transitionOverlay.classList.add('active'); }
+  if(typeTarget) { typeTarget.style.display = 'block'; typeTarget.innerText = ''; }
   
   const fullText = "127SECTION_            PROTOCOL";
   let charIndex = 0;
 
   setTimeout(() => {
     const typeInterval = setInterval(() => {
-      if (charIndex < fullText.length) { typeTarget.innerText += fullText.charAt(charIndex); charIndex++; } 
+      if (charIndex < fullText.length) { 
+        if(typeTarget) typeTarget.innerText += fullText.charAt(charIndex); 
+        charIndex++; 
+      } 
       else {
         clearInterval(typeInterval);
         setTimeout(() => {
           document.getElementById('lobby-screen').style.display = 'none';
           document.getElementById('battle-screen').style.display = 'grid';
-          document.getElementById('top-battle-stats').style.visibility = 'visible';
+          const topStats = document.getElementById('top-battle-stats');
+          if(topStats) topStats.style.visibility = 'visible';
           initBattleData();
           
-          typeTarget.style.display = 'none';
-          transitionOverlay.classList.remove('active'); transitionOverlay.classList.add('exit'); 
+          if(typeTarget) typeTarget.style.display = 'none';
+          if(transitionOverlay) { transitionOverlay.classList.remove('active'); transitionOverlay.classList.add('exit'); }
           gameState.isGameOver = false; lastFrameTime = performance.now();
           gameState.loopId = requestAnimationFrame(gameLoop);
 
           setTimeout(() => {
+            if(transitionOverlay) {
               transitionOverlay.style.transition = 'none'; transitionOverlay.classList.remove('exit'); void transitionOverlay.offsetWidth; 
               transitionOverlay.style.transition = 'top 0.5s cubic-bezier(0.77, 0, 0.175, 1)';
+            }
               isStartingGame = false; 
           }, 500);
         }, 2500);
@@ -755,7 +766,8 @@ function triggerGameOver(result) {
     configState.tokens += Math.floor(100 * diffMult);
   }
   
-  saveData(); overlay.style.display = 'flex'; 
+  saveData(); 
+  if(overlay) overlay.style.display = 'flex'; 
 }
 
 function resetToLobby() {
@@ -855,10 +867,79 @@ function autoScaleUI() {
   gsap.set(wrapper, { xPercent: -50, yPercent: -50, scale: CSSscale });
 }
 
+function toggleInform(show) {
+  const overlay = document.getElementById('inform-overlay');
+  if (overlay) overlay.style.display = show ? 'flex' : 'none';
+}
+
+/* ========================================================
+   [초기 설정] 난이도 선택 및 초기 자원 분배
+======================================================== */
+function initDifficultySelection() {
+  const overlay = document.getElementById('difficulty-overlay');
+  const diffCards = document.querySelectorAll('.diff-card');
+
+  if (!overlay) return;
+
+  if (localStorage.getItem('tacticalConfig')) {
+    overlay.style.display = 'none';
+    initTutorial();
+    return;
+  }
+
+  overlay.style.display = 'flex';
+
+  diffCards.forEach(card => {
+    card.addEventListener('click', function onClick() {
+      const diff = card.getAttribute('data-diff').toLowerCase();
+      const pulls = parseInt(card.getAttribute('data-pulls'), 10);
+
+      let initialTokens = 1200; 
+      if (diff === 'normal') initialTokens = 600;
+      if (diff === 'hard') initialTokens = 200;
+
+      configState.difficulty = diff;
+      configState.tokens = initialTokens;
+      saveData();
+
+      localStorage.setItem('gachaMaxPulls', pulls);
+
+      if (typeof updateLobbyUI === 'function') updateLobbyUI();
+      if (typeof updateIntelBriefing === 'function') updateIntelBriefing(diff);
+
+      overlay.style.pointerEvents = 'none';
+
+      gsap.to(overlay, {
+        opacity: 0,
+        duration: 0.6,
+        ease: "power2.out",
+        onComplete: () => {
+          overlay.style.display = 'none';
+          initTutorial(); 
+        }
+      });
+    });
+  });
+}
+
+function hardResetSystem() {
+  if (confirm("시스템 경고: 모든 진행도, 유닛, 그리고 재화 데이터가 삭제됩니다. 정말 초기화하시겠습니까?")) {
+    localStorage.removeItem('tacticalConfig');
+    localStorage.removeItem('tacticalStats');
+    localStorage.removeItem('tacticalCleared');
+    localStorage.removeItem('gachaInventory');
+    localStorage.removeItem('gachaMaxPulls');
+    localStorage.removeItem('gachaTotalPull');
+    localStorage.removeItem('tutorialSeen');
+    
+    gsap.to("body", { opacity: 0, duration: 0.5, onComplete: () => location.reload() });
+  }
+}
+
 window.addEventListener('resize', autoScaleUI);
 document.addEventListener('DOMContentLoaded', () => {
   initUICache(); initAmbientAnimations(); autoScaleUI(); updateLobbyUI(); initTargetCursor(); updateIntelBriefing(configState.difficulty);
-  initTutorial();
+  initDifficultySelection(); 
   gsap.to("#page-transition", { yPercent: 100, duration: 1.2, ease: "power3.inOut" });
 });
 
@@ -879,14 +960,12 @@ function initTutorial() {
   const tutorialImages = ['tutorial_guide.png', 'tutorial_guide2.png'];
   let currentStep = 0;
 
-  // 1. 로컬 스토리지를 확인하여 이미 본 적이 있다면 모달을 숨기고 함수를 종료합니다.
   const hasSeenTutorial = localStorage.getItem('tutorialSeen');
   if (hasSeenTutorial) {
     tutorialModal.classList.add('hidden');
     return;
   }
 
-  // 2. 처음 방문한 경우에만 튜토리얼을 활성화합니다.
   tutorialModal.classList.remove('hidden');
   tutorialImg.src = tutorialImages[currentStep];
   closeBtn.textContent = "NEXT";
@@ -906,7 +985,6 @@ function initTutorial() {
         ease: "power2.out",
         onComplete: () => {
           tutorialModal.classList.add('hidden');
-          // 3. 튜토리얼이 완전히 끝나면 로컬 스토리지에 기록을 남깁니다.
           localStorage.setItem('tutorialSeen', 'true');
         }
       });
